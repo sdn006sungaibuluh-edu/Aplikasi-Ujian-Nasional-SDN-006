@@ -18,6 +18,11 @@ import {
 import { SchoolProfile, Student } from '../../types';
 import { KopSurat } from '../common/KopSurat';
 import {
+  SUBJECT_LIST,
+  calculateStudentTotalFinalScore,
+  calculateStudentOverallFinalScore,
+} from '../../constants/subjects';
+import {
   GuruRapat,
   DEFAULT_GURU_RAPAT,
   UndanganDocState,
@@ -248,7 +253,7 @@ export const GraduationDocsView: React.FC<Props> = ({
         <p style="margin: 0; text-indent: 0;">Kepala Sekolah,</p>
         <div style="height: 55pt;"></div>
         <p style="margin: 0; font-weight: bold; text-decoration: underline; text-transform: uppercase; text-indent: 0;">${schoolProfile.kepalaSekolah}</p>
-        <p style="margin: 0; font-family: monospace; text-indent: 0;">NIP. ${schoolProfile.nipKepalaSekolah}</p>
+        <p style="margin: 0; text-indent: 0;">NIP. ${schoolProfile.nipKepalaSekolah}</p>
       </div>
       <div style="clear: both;"></div>
 
@@ -367,7 +372,7 @@ export const GraduationDocsView: React.FC<Props> = ({
             <p style="margin: 0; text-indent: 0;">Notulis / Sekretaris Rapat,</p>
             <div style="height: 55pt;"></div>
             <p style="margin: 0; font-weight: bold; text-decoration: underline; text-transform: uppercase; text-indent: 0;">${baState.namaNotulis}</p>
-            <p style="margin: 0; font-family: monospace; text-indent: 0;">NIP. ${baState.nipNotulis}</p>
+            <p style="margin: 0; text-indent: 0;">NIP. ${baState.nipNotulis}</p>
             `
                 : ''
             }
@@ -378,7 +383,7 @@ export const GraduationDocsView: React.FC<Props> = ({
             <p style="margin: 4pt 0 0 0; font-weight: bold; text-indent: 0;">Kepala SD Negeri 006 Sungai Buluh,</p>
             <div style="height: 50pt;"></div>
             <p style="margin: 0; font-weight: bold; text-decoration: underline; text-transform: uppercase; text-indent: 0;">${schoolProfile.kepalaSekolah}</p>
-            <p style="margin: 0; font-family: monospace; text-indent: 0;">NIP. ${schoolProfile.nipKepalaSekolah}</p>
+            <p style="margin: 0; text-indent: 0;">NIP. ${schoolProfile.nipKepalaSekolah}</p>
           </td>
         </tr>
       </table>
@@ -498,7 +503,7 @@ export const GraduationDocsView: React.FC<Props> = ({
         <p style="margin: 6pt 0 0 0; font-weight: bold; text-indent: 0;">Kepala SD Negeri 006 Sungai Buluh,</p>
         <div style="height: 55pt;"></div>
         <p style="margin: 0; font-weight: bold; text-decoration: underline; text-transform: uppercase; text-indent: 0;">${schoolProfile.kepalaSekolah}</p>
-        <p style="margin: 0; font-family: monospace; text-indent: 0;">NIP. ${schoolProfile.nipKepalaSekolah}</p>
+        <p style="margin: 0; text-indent: 0;">NIP. ${schoolProfile.nipKepalaSekolah}</p>
       </div>
       <div style="clear: both;"></div>
 
@@ -591,7 +596,7 @@ export const GraduationDocsView: React.FC<Props> = ({
         <p style="margin: 2pt 0 0 0; font-weight: bold; text-indent: 0;">Kepala SDN 006 Sungai Buluh,</p>
         <div style="height: 50pt;"></div>
         <p style="margin: 0; font-weight: bold; text-decoration: underline; text-transform: uppercase; text-indent: 0;">${schoolProfile.kepalaSekolah}</p>
-        <p style="margin: 0; font-family: monospace; text-indent: 0;">NIP. ${schoolProfile.nipKepalaSekolah}</p>
+        <p style="margin: 0; text-indent: 0;">NIP. ${schoolProfile.nipKepalaSekolah}</p>
       </div>
       <div style="clear: both;"></div>
     `;
@@ -1633,7 +1638,7 @@ export const GraduationDocsView: React.FC<Props> = ({
                   <div className="font-bold underline uppercase tracking-wide">
                     {schoolProfile.kepalaSekolah}
                   </div>
-                  <div className="font-mono text-zinc-800">
+                  <div className="pt-0.5 text-zinc-900 tracking-normal font-normal">
                     NIP. {schoolProfile.nipKepalaSekolah}
                   </div>
                 </div>
@@ -1733,7 +1738,7 @@ export const GraduationDocsView: React.FC<Props> = ({
                       <div>Notulis / Sekretaris Rapat,</div>
                       <div className="h-20"></div>
                       <div className="font-bold underline uppercase">{baState.namaNotulis}</div>
-                      <div className="font-mono text-zinc-800">NIP. {baState.nipNotulis}</div>
+                      <div className="pt-0.5 text-zinc-900 tracking-normal font-normal">NIP. {baState.nipNotulis}</div>
                     </div>
                   )}
                 </div>
@@ -1748,7 +1753,7 @@ export const GraduationDocsView: React.FC<Props> = ({
                     <div className="font-bold underline uppercase tracking-wide">
                       {schoolProfile.kepalaSekolah}
                     </div>
-                    <div className="font-mono text-zinc-800">
+                    <div className="pt-0.5 text-zinc-900 tracking-normal font-normal">
                       NIP. {schoolProfile.nipKepalaSekolah}
                     </div>
                   </div>
@@ -1854,14 +1859,14 @@ export const GraduationDocsView: React.FC<Props> = ({
                   <div>Notulis / Sekretaris Rapat,</div>
                   <div className="h-16"></div>
                   <div className="font-bold underline uppercase">BUDI SANTOSO, S.Pd.SD</div>
-                  <div className="font-mono text-zinc-700">NIP. 19851210 200903 1 005</div>
+                  <div className="pt-0.5 text-zinc-900 tracking-normal font-normal">NIP. 19851210 200903 1 005</div>
                 </div>
                 <div className="text-center w-64 space-y-1">
                   <div>{rapatHadirTanggal}</div>
                   <div className="font-bold">Kepala SDN 006 Sungai Buluh</div>
                   <div className="h-16"></div>
                   <div className="font-bold underline uppercase">{schoolProfile.kepalaSekolah}</div>
-                  <div className="font-mono text-zinc-700">NIP. {schoolProfile.nipKepalaSekolah}</div>
+                  <div className="pt-0.5 text-zinc-900 tracking-normal font-normal">NIP. {schoolProfile.nipKepalaSekolah}</div>
                 </div>
               </div>
             </div>
@@ -2019,7 +2024,7 @@ export const GraduationDocsView: React.FC<Props> = ({
                   <div className="pt-2 font-bold">Kepala SD Negeri 006 Sungai Buluh,</div>
                   <div className="h-20"></div>
                   <div className="font-bold underline uppercase">{schoolProfile.kepalaSekolah}</div>
-                  <div className="font-mono text-zinc-700">NIP. {schoolProfile.nipKepalaSekolah}</div>
+                  <div className="pt-0.5 text-zinc-900 tracking-normal font-normal">NIP. {schoolProfile.nipKepalaSekolah}</div>
                 </div>
               </div>
 
@@ -2046,33 +2051,59 @@ export const GraduationDocsView: React.FC<Props> = ({
                     </p>
                     <p className="font-mono text-[10px]">NOMOR : {skState.nomor}</p>
                     <p className="text-xs font-extrabold uppercase">
-                      DAFTAR PESERTA DIDIK KELAS VI YANG DINYATAKAN LULUS
+                      DAFTAR PESERTA DIDIK KELAS VI YANG DINYATAKAN LULUS & REKAPITULASI NILAI AKHIR
+                    </p>
+                    <p className="text-[10px] text-zinc-600">
+                      Tahun Pelajaran {schoolProfile.tahunPelajaran} • Bobot: {schoolProfile.bobotRapor}% Rata Rapor + {schoolProfile.bobotUS}% Ujian Sekolah • KKM: {schoolProfile.kkmKelulusan}
                     </p>
                   </div>
-                  <table className="w-full text-left text-[11px] border border-black border-collapse">
-                    <thead>
-                      <tr className="bg-zinc-100 font-bold border-b border-black">
-                        <th className="p-1.5 w-8 text-center border-r border-black">No</th>
-                        <th className="p-1.5 min-w-[110px] border-r border-black">No. Peserta</th>
-                        <th className="p-1.5 min-w-[85px] border-r border-black">NISN</th>
-                        <th className="p-1.5 min-w-[180px] border-r border-black">Nama Lengkap</th>
-                        <th className="p-1.5 text-center w-10 border-r border-black">L/P</th>
-                        <th className="p-1.5 text-center min-w-[80px]">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {students.map((s, idx) => (
-                        <tr key={s.id} className="border-b border-black h-6 break-inside-avoid">
-                          <td className="p-1 text-center font-bold border-r border-black">{idx + 1}</td>
-                          <td className="p-1 font-mono border-r border-black">{s.noPeserta}</td>
-                          <td className="p-1 font-mono border-r border-black">{s.nisn}</td>
-                          <td className="p-1 font-bold uppercase border-r border-black">{s.nama}</td>
-                          <td className="p-1 text-center border-r border-black">{s.jenisKelamin}</td>
-                          <td className="p-1 text-center font-bold text-emerald-800">LULUS</td>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-[11px] border border-black border-collapse">
+                      <thead>
+                        <tr className="bg-zinc-100 font-bold border-b border-black">
+                          <th className="p-1.5 w-8 text-center border-r border-black">No</th>
+                          <th className="p-1.5 min-w-[100px] border-r border-black">No. Peserta</th>
+                          <th className="p-1.5 min-w-[80px] border-r border-black">NISN</th>
+                          <th className="p-1.5 min-w-[170px] border-r border-black">Nama Lengkap</th>
+                          <th className="p-1.5 text-center w-8 border-r border-black">L/P</th>
+                          <th className="p-1.5 text-center w-16 border-r border-black">Total NA</th>
+                          <th className="p-1.5 text-center w-16 border-r border-black">Rata NA</th>
+                          <th className="p-1.5 text-center min-w-[70px]">Status</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {students.map((s, idx) => {
+                          const totalNA = calculateStudentTotalFinalScore(s, schoolProfile, SUBJECT_LIST);
+                          const avgNA = calculateStudentOverallFinalScore(s, schoolProfile, SUBJECT_LIST);
+                          return (
+                            <tr key={s.id} className="border-b border-black h-6 break-inside-avoid">
+                              <td className="p-1 text-center font-bold border-r border-black">{idx + 1}</td>
+                              <td className="p-1 font-mono border-r border-black">{s.noPeserta}</td>
+                              <td className="p-1 font-mono border-r border-black">{s.nisn}</td>
+                              <td className="p-1 font-bold uppercase border-r border-black">{s.nama}</td>
+                              <td className="p-1 text-center border-r border-black">{s.jenisKelamin}</td>
+                              <td className="p-1 text-center font-mono font-bold border-r border-black">{totalNA.toFixed(1)}</td>
+                              <td className="p-1 text-center font-mono font-bold text-emerald-800 border-r border-black">{avgNA.toFixed(2)}</td>
+                              <td className="p-1 text-center font-bold text-emerald-800">LULUS</td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Pengesahan Titimangsa Lampiran */}
+                  <div className="flex justify-end pt-4 break-inside-avoid">
+                    <div className="w-64 space-y-1 text-xs">
+                      <div>Sungai Buluh, {skState.padaTanggal}</div>
+                      <div className="font-bold">Kepala SD Negeri 006 Sungai Buluh,</div>
+                      <div className="h-16"></div>
+                      <div className="font-bold underline uppercase">{schoolProfile.kepalaSekolah}</div>
+                      <div className="pt-0.5 text-zinc-900 tracking-normal font-normal">
+                        NIP. {schoolProfile.nipKepalaSekolah}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>

@@ -74,7 +74,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       label: 'Rekap Nilai Akhir',
       sublabel: 'Perangkingan & Bobot',
       icon: Award,
-      badge: 'SKHU',
+      badge: 'Transkrip',
     },
     {
       id: 'grades-template-import',
@@ -93,7 +93,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: 'diploma',
       label: 'Ijazah & Kelulusan',
-      sublabel: 'Cetak SKHU & Blangko',
+      sublabel: 'Transkrip Nilai & Blangko',
       icon: GraduationCap,
       badge: 'Resmi',
     },

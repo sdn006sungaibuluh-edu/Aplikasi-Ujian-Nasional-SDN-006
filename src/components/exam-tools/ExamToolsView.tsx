@@ -597,7 +597,7 @@ export const ExamToolsView: React.FC = () => {
                     <div className="font-bold text-zinc-800 dark:text-zinc-200 mt-4 underline">
                       {schoolProfile.kepalaSekolah}
                     </div>
-                    <div className="font-mono text-zinc-400">NIP. {schoolProfile.nipKepalaSekolah}</div>
+                    <div className="pt-0.5 text-zinc-500 font-normal">NIP. {schoolProfile.nipKepalaSekolah}</div>
                   </div>
                 </div>
               </div>
@@ -1194,7 +1194,7 @@ export const ExamToolsView: React.FC = () => {
               <p className="font-bold underline text-zinc-900 dark:text-zinc-100">
                 {schoolProfile.kepalaSekolah}
               </p>
-              <p className="font-mono text-zinc-500">NIP. {schoolProfile.nipKepalaSekolah}</p>
+              <p className="pt-0.5 text-zinc-600 dark:text-zinc-400 font-normal">NIP. {schoolProfile.nipKepalaSekolah}</p>
             </div>
             <div className="text-right">
               <p className="text-zinc-500">Sungai Buluh, 18 Mei 2026</p>
@@ -1639,7 +1639,7 @@ export const ExamToolsView: React.FC = () => {
                       <div className="text-right">
                         <span>Kepala Sekolah,</span>
                         <div className="font-bold text-black underline">{schoolProfile.kepalaSekolah}</div>
-                        <div className="font-mono text-zinc-600">NIP. {schoolProfile.nipKepalaSekolah}</div>
+                        <div className="pt-0.5 text-zinc-700 font-normal">NIP. {schoolProfile.nipKepalaSekolah}</div>
                       </div>
                     </div>
                   </div>
@@ -1803,14 +1803,14 @@ export const ExamToolsView: React.FC = () => {
                   <p className="font-bold text-black">Kepala {schoolProfile.namaSekolah},</p>
                   <div className="h-16"></div>
                   <p className="font-bold underline text-black">{schoolProfile.kepalaSekolah}</p>
-                  <p className="font-mono text-zinc-700">NIP. {schoolProfile.nipKepalaSekolah}</p>
+                  <p className="pt-0.5 text-zinc-700 font-normal">NIP. {schoolProfile.nipKepalaSekolah}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-zinc-700">{schoolProfile.tempatCetak || 'Sungai Buluh'}, 18 Mei 2026</p>
                   <p className="font-bold text-black">Ketua Panitia Ujian,</p>
                   <div className="h-16"></div>
                   <p className="font-bold underline text-black">{schoolProfile.ketuaPanitia}</p>
-                  <p className="font-mono text-zinc-700">NIP. {schoolProfile.nipKetuaPanitia}</p>
+                  <p className="pt-0.5 text-zinc-700 font-normal">NIP. {schoolProfile.nipKetuaPanitia}</p>
                 </div>
               </div>
             </div>
@@ -1861,14 +1861,14 @@ export const ExamToolsView: React.FC = () => {
                   <p className="font-semibold text-zinc-800">Ketua TPU VI Singingi Hilir,</p>
                   <div className="h-16"></div>
                   <p className="font-bold underline text-black">SUPRIADI, M.Pd.</p>
-                  <p className="font-mono text-zinc-700">NIP. 19720412 199603 1 003</p>
+                  <p className="pt-0.5 text-zinc-700 font-normal">NIP. 19720412 199603 1 003</p>
                 </div>
                 <div className="text-right">
                   <p className="text-zinc-700">{schoolProfile.tempatCetak || 'Sungai Buluh'}, {schoolProfile.tanggalKelulusan}</p>
                   <p className="font-bold text-black">Kepala {schoolProfile.namaSekolah},</p>
                   <div className="h-16"></div>
                   <p className="font-bold underline text-black">{schoolProfile.kepalaSekolah}</p>
-                  <p className="font-mono text-zinc-700">NIP. {schoolProfile.nipKepalaSekolah}</p>
+                  <p className="pt-0.5 text-zinc-700 font-normal">NIP. {schoolProfile.nipKepalaSekolah}</p>
                 </div>
               </div>
             </div>
@@ -1917,14 +1917,14 @@ export const ExamToolsView: React.FC = () => {
                   <p className="font-semibold text-zinc-800">Ketua Panitia Ujian,</p>
                   <div className="h-16"></div>
                   <p className="font-bold underline text-black">{schoolProfile.ketuaPanitia}</p>
-                  <p className="font-mono text-zinc-700">NIP. {schoolProfile.nipKetuaPanitia}</p>
+                  <p className="pt-0.5 text-zinc-700 font-normal">NIP. {schoolProfile.nipKetuaPanitia}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-zinc-700">{schoolProfile.tempatCetak || 'Sungai Buluh'}, {schoolProfile.tanggalKelulusan}</p>
                   <p className="font-bold text-black">Kepala {schoolProfile.namaSekolah},</p>
                   <div className="h-16"></div>
                   <p className="font-bold underline text-black">{schoolProfile.kepalaSekolah}</p>
-                  <p className="font-mono text-zinc-700">NIP. {schoolProfile.nipKepalaSekolah}</p>
+                  <p className="pt-0.5 text-zinc-700 font-normal">NIP. {schoolProfile.nipKepalaSekolah}</p>
                 </div>
               </div>
             </div>
@@ -2011,7 +2011,7 @@ export const ExamToolsView: React.FC = () => {
                     <div>Kepala Sekolah,</div>
                     <div className="h-20"></div>
                     <div className="font-bold underline uppercase tracking-wide">{schoolProfile.kepalaSekolah}</div>
-                    <div className="font-mono text-zinc-800">NIP. {schoolProfile.nipKepalaSekolah}</div>
+                    <div className="pt-0.5 text-zinc-800 font-normal">NIP. {schoolProfile.nipKepalaSekolah}</div>
                   </div>
                 </div>
 
@@ -2111,7 +2111,7 @@ export const ExamToolsView: React.FC = () => {
                         <div>Notulis / Sekretaris Rapat,</div>
                         <div className="h-20"></div>
                         <div className="font-bold underline uppercase">{currentBA.namaNotulis}</div>
-                        <div className="font-mono text-zinc-800">NIP. {currentBA.nipNotulis}</div>
+                        <div className="pt-0.5 text-zinc-800 font-normal">NIP. {currentBA.nipNotulis}</div>
                       </div>
                     )}
                   </div>
@@ -2124,7 +2124,7 @@ export const ExamToolsView: React.FC = () => {
                       <div className="font-bold underline uppercase tracking-wide">
                         {schoolProfile.kepalaSekolah}
                       </div>
-                      <div className="font-mono text-zinc-800">
+                      <div className="pt-0.5 text-zinc-800 font-normal">
                         NIP. {schoolProfile.nipKepalaSekolah}
                       </div>
                     </div>
@@ -2210,14 +2210,14 @@ export const ExamToolsView: React.FC = () => {
                     <div>Notulis / Sekretaris Rapat,</div>
                     <div className="h-16"></div>
                     <div className="font-bold underline uppercase">BUDI SANTOSO, S.Pd.SD</div>
-                    <div className="font-mono text-zinc-700">NIP. 19851210 200903 1 005</div>
+                    <div className="pt-0.5 text-zinc-700 font-normal">NIP. 19851210 200903 1 005</div>
                   </div>
                   <div className="text-center w-64 space-y-1">
                     <div>Sungai Buluh, 30 Mei 2026</div>
                     <div className="font-bold">Kepala SDN 006 Sungai Buluh</div>
                     <div className="h-16"></div>
                     <div className="font-bold underline uppercase">{schoolProfile.kepalaSekolah}</div>
-                    <div className="font-mono text-zinc-700">NIP. {schoolProfile.nipKepalaSekolah}</div>
+                    <div className="pt-0.5 text-zinc-700 font-normal">NIP. {schoolProfile.nipKepalaSekolah}</div>
                   </div>
                 </div>
               </div>
@@ -2372,7 +2372,7 @@ export const ExamToolsView: React.FC = () => {
                     <div className="pt-2 font-bold">Kepala SD Negeri 006 Sungai Buluh,</div>
                     <div className="h-20"></div>
                     <div className="font-bold underline uppercase">{schoolProfile.kepalaSekolah}</div>
-                    <div className="font-mono text-zinc-700">NIP. {schoolProfile.nipKepalaSekolah}</div>
+                    <div className="pt-0.5 text-zinc-700 font-normal">NIP. {schoolProfile.nipKepalaSekolah}</div>
                   </div>
                 </div>
 

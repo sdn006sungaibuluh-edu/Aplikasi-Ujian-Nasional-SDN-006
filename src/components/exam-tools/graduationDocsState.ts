@@ -234,6 +234,15 @@ export interface SKKelulusanState {
   fontFamily: DocFontFamily;
   fontSize: DocFontSize;
   lineSpacing: DocLineSpacing;
+  // Optional Surat Keterangan Kelulusan (SKL) specific fields
+  pembukaText?: string;
+  dasarHukumText?: string;
+  penutupText?: string;
+  tahunPelajaran?: string;
+  nomorSKPenetapan?: string;
+  tanggalSKPenetapan?: string;
+  tempatCetak?: string;
+  tanggalCetak?: string;
 }
 
 export const DEFAULT_SK_KELULUSAN: SKKelulusanState = {

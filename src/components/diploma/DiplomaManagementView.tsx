@@ -3,12 +3,9 @@ import { useApp } from '../../context/AppContext';
 import { Student } from '../../types';
 import {
   SUBJECT_LIST,
-  calculateSubjectRaporAverage,
-  calculateSubjectUSScore,
   calculateSubjectFinalScore,
   calculateStudentOverallFinalScore,
   calculateStudentTotalFinalScore,
-  numberToWordsIndonesian,
 } from '../../constants/subjects';
 import { Badge } from '../common/Badge';
 import { KopSurat } from '../common/KopSurat';
@@ -67,11 +64,11 @@ export const DiplomaManagementView: React.FC = () => {
           <div className="flex items-center gap-2">
             <GraduationCap className="h-5 w-5 text-emerald-600" />
             <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-50">
-              Penerbitan SKHU, SK Kelulusan & Pengelolaan Ijazah
+              Penerbitan Transkrip Nilai, SK Kelulusan & Pengelolaan Ijazah
             </h2>
           </div>
           <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
-            Cetak format resmi Surat Keterangan Hasil Ujian Sementara, Laporan Blangko, dan Buku Serah Terima
+            Cetak format resmi Transkrip Nilai, SK Kelulusan, Laporan Blangko, dan Buku Serah Terima
           </p>
         </div>
 
@@ -89,7 +86,7 @@ export const DiplomaManagementView: React.FC = () => {
       {/* Navigation Sub Tabs */}
       <div className="flex overflow-x-auto gap-2 border-b border-zinc-200 dark:border-zinc-800 pb-3">
         {[
-          { key: 'skhu', label: 'Cetak SKHU Sementara', icon: FileText },
+          { key: 'skhu', label: 'Transkrip Nilai', icon: FileText },
           { key: 'sk-kelulusan', label: 'Surat Keputusan (SK) Kelulusan', icon: Award },
           { key: 'blangko', label: 'Laporan Blangko Ijazah', icon: BookMarked },
           { key: 'serah-terima', label: 'Buku Serah Terima Ijazah', icon: CheckCircle },
@@ -115,7 +112,7 @@ export const DiplomaManagementView: React.FC = () => {
         })}
       </div>
 
-      {/* 1. CETAK SKHU / TRANSKRIP NILAI RESMI */}
+      {/* 1. CETAK TRANSKRIP NILAI RESMI */}
       {activeTab === 'skhu' && (
         <div className="space-y-6">
           {/* Student Selector Bar */}
@@ -138,11 +135,11 @@ export const DiplomaManagementView: React.FC = () => {
             </div>
 
             <div className="text-xs text-zinc-500 font-medium">
-              Format Resmi Transkrip Nilai SKHU SDN 006 Sungai Buluh
+              Format Resmi Transkrip Nilai Siswa SDN 006 Sungai Buluh
             </div>
           </div>
 
-          {/* Official Printable SKHU Sheet */}
+          {/* Official Printable Transkrip Nilai / SKHU Sheet */}
           <div className="mx-auto max-w-4xl rounded-2xl border-2 border-zinc-300 bg-white p-8 sm:p-12 shadow-md dark:border-zinc-700 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 print:border-none print:shadow-none print:p-0">
             {/* Kop Surat Resmi */}
             <KopSurat schoolProfile={schoolProfile} />
@@ -150,17 +147,12 @@ export const DiplomaManagementView: React.FC = () => {
             {/* Document Title */}
             <div className="text-center my-6">
               <h3 className="text-base font-extrabold uppercase underline tracking-wider">
-                SURAT KETERANGAN HASIL UJIAN (SKHU) SEMENTARA
+                TRANSKRIP NILAI
               </h3>
               <p className="text-xs font-bold text-zinc-600 dark:text-zinc-400 mt-0.5">
-                Nomor: {currentStudent.noSuratTranskrip || `421.2 / SDN-006 / SKHU / ${schoolProfile.tahunPelajaran.replace('/', '-')} / ${currentStudent.noMeja.toString().padStart(3, '0')}`}
+                Nomor: {currentStudent.noSuratTranskrip || `421.2 / SDN-006 / TRANSKRIP / ${schoolProfile.tahunPelajaran.replace('/', '-')} / ${currentStudent.noMeja.toString().padStart(3, '0')}`}
               </p>
             </div>
-
-            {/* Intro text */}
-            <p className="text-xs leading-relaxed mb-4">
-              Yang bertanda tangan di bawah ini, Kepala Sekolah Dasar Negeri 006 Sungai Buluh, Kecamatan Singingi Hilir, Kabupaten Kuantan Singingi, menerangkan bahwa:
-            </p>
 
             {/* Student Biodata */}
             <div className="rounded-xl bg-zinc-50/80 dark:bg-zinc-800/40 p-4 border border-zinc-200 dark:border-zinc-700 text-xs mb-6 space-y-1.5">
@@ -212,68 +204,34 @@ export const DiplomaManagementView: React.FC = () => {
               </div>
             </div>
 
-            {/* Statement */}
-            <p className="text-xs leading-relaxed mb-4">
-              Berdasarkan hasil Ujian Sekolah dan pemenuhan seluruh kriteria kelulusan, yang bersangkutan dinyatakan:
-            </p>
-
-            <div className="text-center my-3 py-2 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700 rounded-xl">
-              <span className="text-sm font-extrabold uppercase tracking-widest text-emerald-800 dark:text-emerald-300">
-                L U L U S
-              </span>
-            </div>
-
-            <p className="text-xs mb-3 font-medium">
-              dengan perolehan nilai sebagai berikut:
-            </p>
-
             {/* Table of Grades */}
             <div className="overflow-x-auto rounded-xl border border-zinc-300 dark:border-zinc-700 mb-6">
               <table className="w-full text-left text-xs">
                 <thead className="bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 font-bold border-b border-zinc-300 dark:border-zinc-700">
                   <tr>
-                    <th className="p-2.5 w-10 text-center border-r border-zinc-300 dark:border-zinc-700">No</th>
-                    <th className="p-2.5 min-w-[200px] border-r border-zinc-300 dark:border-zinc-700">
+                    <th className="p-2.5 w-12 text-center border-r border-zinc-300 dark:border-zinc-700">No</th>
+                    <th className="p-2.5 min-w-[240px] border-r border-zinc-300 dark:border-zinc-700">
                       Mata Pelajaran (Kurikulum 2013)
                     </th>
-                    <th className="p-2.5 text-center w-24 border-r border-zinc-300 dark:border-zinc-700">
-                      Rata Rapor
+                    <th className="p-2.5 text-center w-28">
+                      Nilai
                     </th>
-                    <th className="p-2.5 text-center w-24 border-r border-zinc-300 dark:border-zinc-700">
-                      Ujian Sekolah
-                    </th>
-                    <th className="p-2.5 text-center w-24 border-r border-zinc-300 dark:border-zinc-700">
-                      Nilai Akhir
-                    </th>
-                    <th className="p-2.5 min-w-[180px]">Nilai Terbilang (Huruf)</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-zinc-200 dark:divide-zinc-700">
                   {subjects.map((sub, idx) => {
-                    const rAvg = calculateSubjectRaporAverage(currentStudent, sub.key);
-                    const usScore = calculateSubjectUSScore(currentStudent, sub.key);
                     const na = calculateSubjectFinalScore(currentStudent, sub.key, schoolProfile);
-                    const words = numberToWordsIndonesian(na);
 
                     return (
                       <tr key={sub.key} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40">
-                        <td className="p-2 text-center font-medium border-r border-zinc-200 dark:border-zinc-700">
+                        <td className="p-2.5 text-center font-medium border-r border-zinc-200 dark:border-zinc-700">
                           {idx + 1}
                         </td>
-                        <td className="p-2 font-medium text-zinc-900 dark:text-zinc-100 border-r border-zinc-200 dark:border-zinc-700">
+                        <td className="p-2.5 font-medium text-zinc-900 dark:text-zinc-100 border-r border-zinc-200 dark:border-zinc-700">
                           {sub.name}
                         </td>
-                        <td className="p-2 text-center font-mono border-r border-zinc-200 dark:border-zinc-700">
-                          {rAvg.toFixed(2)}
-                        </td>
-                        <td className="p-2 text-center font-mono border-r border-zinc-200 dark:border-zinc-700">
-                          {usScore.toFixed(2)}
-                        </td>
-                        <td className="p-2 text-center font-mono font-bold text-emerald-800 dark:text-emerald-400 border-r border-zinc-200 dark:border-zinc-700">
+                        <td className="p-2.5 text-center font-mono font-bold text-emerald-800 dark:text-emerald-400">
                           {na.toFixed(2)}
-                        </td>
-                        <td className="p-2 text-[11px] text-zinc-600 dark:text-zinc-300 italic">
-                          {words}
                         </td>
                       </tr>
                     );
@@ -284,65 +242,32 @@ export const DiplomaManagementView: React.FC = () => {
                     <td colSpan={2} className="p-2.5 text-right uppercase border-r border-zinc-300 dark:border-zinc-700">
                       Jumlah / Total Nilai :
                     </td>
-                    <td colSpan={2} className="border-r border-zinc-300 dark:border-zinc-700"></td>
-                    <td className="p-2.5 text-center font-mono font-bold text-emerald-800 dark:text-emerald-300 border-r border-zinc-300 dark:border-zinc-700">
+                    <td className="p-2.5 text-center font-mono font-bold text-emerald-800 dark:text-emerald-300">
                       {calculateStudentTotalFinalScore(currentStudent, schoolProfile, subjects).toFixed(2)}
-                    </td>
-                    <td className="p-2.5 text-[11px] italic">
-                      {numberToWordsIndonesian(calculateStudentTotalFinalScore(currentStudent, schoolProfile, subjects))}
                     </td>
                   </tr>
                   <tr>
                     <td colSpan={2} className="p-2.5 text-right uppercase border-r border-zinc-300 dark:border-zinc-700">
-                      Rata-Rata Nilai Akhir :
+                      Rata-Rata Nilai :
                     </td>
-                    <td colSpan={2} className="border-r border-zinc-300 dark:border-zinc-700"></td>
-                    <td className="p-2.5 text-center font-mono font-extrabold text-sm text-emerald-800 dark:text-emerald-300 border-r border-zinc-300 dark:border-zinc-700">
+                    <td className="p-2.5 text-center font-mono font-extrabold text-sm text-emerald-800 dark:text-emerald-300">
                       {calculateStudentOverallFinalScore(currentStudent, schoolProfile, subjects).toFixed(2)}
-                    </td>
-                    <td className="p-2.5 text-[11px] italic">
-                      {numberToWordsIndonesian(calculateStudentOverallFinalScore(currentStudent, schoolProfile, subjects))}
                     </td>
                   </tr>
                 </tfoot>
               </table>
             </div>
 
-            {/* Signatures & Stamp area */}
-            <div className="grid grid-cols-2 pt-6 text-xs gap-8 items-end">
-              <div className="flex flex-col items-center">
-                <div className="relative flex h-30 w-24 items-center justify-center rounded border-2 border-zinc-800 bg-zinc-100 p-0.5 text-center overflow-hidden shadow-xs dark:bg-zinc-800">
-                  {currentStudent.foto ? (
-                    <>
-                      <img
-                        src={currentStudent.foto}
-                        alt={currentStudent.nama}
-                        className="h-full w-full object-cover rounded"
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <div className="h-16 w-16 rounded-full border-2 border-blue-900/40 -rotate-12 flex flex-col items-center justify-center bg-blue-900/10 text-[8px] font-extrabold text-blue-950/70 p-1">
-                          <span>CAP TIGA</span>
-                          <span>JARI</span>
-                          <span className="text-[6px]">SDN 006</span>
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <span className="text-[10px] font-bold text-zinc-400">
-                      PAS FOTO<br />3 X 4<br />CAP TIGA JARI
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              <div className="text-right space-y-1">
+            {/* Tanda Tangan Kepala Sekolah */}
+            <div className="flex justify-end pt-6 text-xs break-inside-avoid">
+              <div className="w-72 text-right space-y-1">
                 <p>Sungai Buluh, {schoolProfile.tanggalKelulusan}</p>
                 <p className="font-semibold">Kepala Sekolah SDN 006 Sungai Buluh,</p>
                 <div className="h-16"></div>
                 <p className="font-extrabold underline text-sm uppercase">
                   {schoolProfile.kepalaSekolah}
                 </p>
-                <p className="font-mono text-zinc-600 dark:text-zinc-400">
+                <p className="pt-0.5 text-zinc-700 dark:text-zinc-300 font-normal">
                   NIP. {schoolProfile.nipKepalaSekolah}
                 </p>
               </div>
@@ -353,55 +278,256 @@ export const DiplomaManagementView: React.FC = () => {
 
       {/* 2. SURAT KEPUTUSAN KELULUSAN RESMI */}
       {activeTab === 'sk-kelulusan' && (
-        <div className="mx-auto max-w-4xl rounded-2xl border border-zinc-200 bg-white p-8 sm:p-12 shadow-md dark:border-zinc-800 dark:bg-zinc-900 space-y-6 text-xs text-zinc-800 dark:text-zinc-200 leading-relaxed">
+        <div className="mx-auto max-w-4xl rounded-2xl border border-zinc-200 bg-white p-8 sm:p-12 shadow-md dark:border-zinc-800 dark:bg-zinc-900 space-y-6 text-xs text-zinc-900 dark:text-zinc-100 leading-relaxed font-serif print:border-none print:shadow-none print:p-0">
           {/* Kop Surat Resmi SK Kelulusan */}
           <KopSurat schoolProfile={schoolProfile} />
 
-          <div className="text-center space-y-1">
-            <h3 className="text-sm font-extrabold uppercase">
-              KEPUTUSAN KEPALA {schoolProfile.namaSekolah}
+          <div className="text-center space-y-1 pt-2 pb-2">
+            <h3 className="text-sm sm:text-base font-extrabold uppercase tracking-widest text-zinc-900 dark:text-zinc-50">
+              K E P U T U S A N
             </h3>
-            <p className="font-mono font-bold text-zinc-500">
-              NOMOR: 421.2 / SDN-006 / SK-LULUS / 2026 / 042
-            </p>
-            <p className="font-bold text-emerald-800 dark:text-emerald-400 uppercase">
-              TENTANG PENETAPAN KELULUSAN PESERTA DIDIK KELAS VI TAHUN PELAJARAN {schoolProfile.tahunPelajaran}
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            <p>
-              <b>Menimbang:</b> Bahwa dalam rangka penetapan kelulusan peserta didik kelas VI tahun pelajaran {schoolProfile.tahunPelajaran}, perlu menetapkan Surat Keputusan Kepala Sekolah tentang kelulusan peserta didik SDN 006 Sungai Buluh.
-            </p>
-            <p>
-              <b>Mengingat:</b> Permendikbudristek tentang Standar Kelulusan dan Juknis Penyelenggaraan Ujian Sekolah Dasar Kabupaten Kuantan Singingi.
-            </p>
-            <p>
-              <b>Memperhatikan:</b> Rapat Dewan Guru SDN 006 Sungai Buluh pada tanggal 8 Juni 2026 tentang kriteria kelulusan.
-            </p>
-          </div>
-
-          <div className="rounded-xl bg-zinc-50 dark:bg-zinc-800 p-4 border border-zinc-200 dark:border-zinc-700 space-y-2">
-            <h4 className="font-bold uppercase text-emerald-800 dark:text-emerald-400 text-center">
-              MEMUTUSKAN:
+            <h4 className="text-xs sm:text-sm font-bold uppercase text-zinc-900 dark:text-zinc-100">
+              KEPALA SEKOLAH DASAR NEGERI 006 SUNGAI BULUH
             </h4>
-            <p>
-              <b>PERTAMA:</b> Menetapkan kelulusan bagi {students.length} peserta didik kelas VI SDN 006 Sungai Buluh sebagaimana terlampir dalam daftar rekapitulasi nilai akhir.
+            <p className="font-mono font-bold text-xs text-zinc-600 dark:text-zinc-400">
+              NOMOR : 422/KPTS/SDN-006/SB/VI/2026/041
             </p>
-            <p>
-              <b>KEDUA:</b> Peserta didik yang dinyatakan <b>LULUS</b> berhak menerima Ijazah dan Surat Keterangan Hasil Ujian (SKHU) untuk dipergunakan melanjutkan pendidikan ke jenjang SMP/MTs sederajat.
-            </p>
+            <div className="pt-2">
+              <p className="text-xs font-bold uppercase tracking-widest">T E N T A N G</p>
+              <p className="text-xs sm:text-sm font-extrabold uppercase text-emerald-900 dark:text-emerald-400 max-w-xl mx-auto">
+                PENETAPAN KELULUSAN PESERTA DIDIK KELAS VI TAHUN PELAJARAN {schoolProfile.tahunPelajaran}
+              </p>
+            </div>
+            <div className="pt-2">
+              <p className="text-xs font-bold uppercase tracking-wide">
+                DENGAN RAHMAT TUHAN YANG MAHA ESA
+              </p>
+              <p className="text-xs font-bold uppercase">
+                KEPALA SEKOLAH DASAR NEGERI 006 SUNGAI BULUH,
+              </p>
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 pt-6">
-            <div></div>
-            <div className="text-right">
-              <p>Ditetapkan di: Sungai Buluh</p>
-              <p>Pada tanggal: {schoolProfile.tanggalKelulusan}</p>
-              <p className="font-bold mt-2">Kepala SDN 006 Sungai Buluh,</p>
-              <div className="h-16"></div>
-              <p className="font-bold underline uppercase">{schoolProfile.kepalaSekolah}</p>
-              <p className="font-mono text-zinc-500">NIP. {schoolProfile.nipKepalaSekolah}</p>
+          {/* Konsideran SK Kelulusan */}
+          <div className="space-y-3 leading-relaxed text-justify">
+            <div className="flex items-start">
+              <div className="w-28 sm:w-32 shrink-0 font-bold">Menimbang</div>
+              <div className="w-4 shrink-0 font-bold">:</div>
+              <div className="flex-1 space-y-1.5">
+                <div className="flex items-start">
+                  <span className="w-5 shrink-0">a.</span>
+                  <span className="flex-1">
+                    Bahwa dalam rangka mengakhiri proses pembelajaran dan pelaksanaan ujian sekolah bagi peserta didik kelas VI SD Negeri 006 Sungai Buluh Tahun Pelajaran {schoolProfile.tahunPelajaran}, perlu ditetapkan kelulusan peserta didik;
+                  </span>
+                </div>
+                <div className="flex items-start">
+                  <span className="w-5 shrink-0">b.</span>
+                  <span className="flex-1">
+                    Bahwa peserta didik yang dinyatakan lulus telah memenuhi kriteria dan persyaratan kelulusan yang telah ditentukan oleh satuan pendidikan sesuai dengan ketentuan peraturan perundang-undangan yang berlaku;
+                  </span>
+                </div>
+                <div className="flex items-start">
+                  <span className="w-5 shrink-0">c.</span>
+                  <span className="flex-1">
+                    Bahwa berdasarkan pertimbangan sebagaimana dimaksud pada huruf a dan huruf b di atas, perlu menetapkan Keputusan Kepala Sekolah tentang Penetapan Kelulusan Peserta Didik Kelas VI SD Negeri 006 Sungai Buluh Tahun Pelajaran {schoolProfile.tahunPelajaran}.
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <div className="w-28 sm:w-32 shrink-0 font-bold">Mengingat</div>
+              <div className="w-4 shrink-0 font-bold">:</div>
+              <div className="flex-1 space-y-1.5">
+                <div className="flex items-start">
+                  <span className="w-5 shrink-0">1.</span>
+                  <span className="flex-1">
+                    Undang-Undang Nomor 20 Tahun 2003 tentang Sistem Pendidikan Nasional (Lembaran Negara Republik Indonesia Tahun 2003 Nomor 78, Tambahan Lembaran Negara Republik Indonesia Nomor 4301);
+                  </span>
+                </div>
+                <div className="flex items-start">
+                  <span className="w-5 shrink-0">2.</span>
+                  <span className="flex-1">
+                    Peraturan Pemerintah Nomor 19 Tahun 2005 tentang Standar Nasional Pendidikan, sebagaimana telah diubah beberapa kali terakhir dengan Peraturan Pemerintah Nomor 4 Tahun 2022;
+                  </span>
+                </div>
+                <div className="flex items-start">
+                  <span className="w-5 shrink-0">3.</span>
+                  <span className="flex-1">
+                    Peraturan Menteri Pendidikan, Kebudayaan, Riset, dan Teknologi Nomor 9 Tahun 2022 tentang Evaluasi Sistem Pendidikan oleh Pemerintah Pusat dan Pemerintah Daerah terhadap Pendidikan Anak Usia Dini, Pendidikan Dasar, dan Pendidikan Menengah;
+                  </span>
+                </div>
+                <div className="flex items-start">
+                  <span className="w-5 shrink-0">4.</span>
+                  <span className="flex-1">
+                    Peraturan Menteri Pendidikan, Kebudayaan, Riset, dan Teknologi Nomor 21 Tahun 2022 tentang Standar Penilaian Pendidikan pada Pendidikan Anak Usia Dini, Jenjang Pendidikan Dasar, dan Jenjang Pendidikan Menengah (Berita Negara Republik Indonesia Tahun 2022 Nomor 460).
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <div className="w-28 sm:w-32 shrink-0 font-bold">Memperhatikan</div>
+              <div className="w-4 shrink-0 font-bold">:</div>
+              <div className="flex-1 space-y-1.5">
+                <div className="flex items-start">
+                  <span className="w-5 shrink-0">1.</span>
+                  <span className="flex-1">
+                    Kriteria Kelulusan Peserta Didik Kelas VI SD Negeri 006 Sungai Buluh Tahun Pelajaran {schoolProfile.tahunPelajaran};
+                  </span>
+                </div>
+                <div className="flex items-start">
+                  <span className="w-5 shrink-0">2.</span>
+                  <span className="flex-1">
+                    Hasil Rapat Dewan Guru SD Negeri 006 Sungai Buluh tanggal {schoolProfile.tanggalKelulusan} tentang Penetapan Kelulusan Peserta Didik Kelas VI Tahun Pelajaran {schoolProfile.tahunPelajaran}.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Diktum MEMUTUSKAN */}
+          <div className="text-center font-bold pt-2 pb-1 tracking-widest text-xs sm:text-sm">
+            M E M U T U S K A N :
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex items-start">
+              <div className="w-28 sm:w-32 shrink-0 font-bold">Menetapkan</div>
+              <div className="w-4 shrink-0 font-bold">:</div>
+              <div className="flex-1 font-bold uppercase">
+                KEPUTUSAN KEPALA SEKOLAH DASAR NEGERI 006 SUNGAI BULUH TENTANG PENETAPAN KELULUSAN PESERTA DIDIK KELAS VI TAHUN PELAJARAN {schoolProfile.tahunPelajaran}.
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <div className="w-28 sm:w-32 shrink-0 font-bold">KESATU</div>
+              <div className="w-4 shrink-0 font-bold">:</div>
+              <div className="flex-1">
+                Nama-nama peserta didik Kelas VI Tahun Pelajaran {schoolProfile.tahunPelajaran} yang berjumlah {students.length} orang, sebagaimana tercantum dalam Lampiran Surat Keputusan ini berdasarkan hasil Rekapitulasi Nilai Akhir ({schoolProfile.bobotRapor}% Rapor + {schoolProfile.bobotUS}% Ujian Sekolah), dinyatakan <b>LULUS (100%)</b> dari SD Negeri 006 Sungai Buluh;
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <div className="w-28 sm:w-32 shrink-0 font-bold">KEDUA</div>
+              <div className="w-4 shrink-0 font-bold">:</div>
+              <div className="flex-1">
+                Peserta didik yang dinyatakan lulus sebagaimana dimaksud dalam Diktum KESATU berhak memperoleh Surat Keterangan Lulus (SKL) / SKHU Sementara dan Ijazah sesuai dengan ketentuan perundang-undangan yang berlaku;
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <div className="w-28 sm:w-32 shrink-0 font-bold">KETIGA</div>
+              <div className="w-4 shrink-0 font-bold">:</div>
+              <div className="flex-1">
+                Segala biaya yang timbul akibat diterbitkannya Keputusan ini dibebankan pada anggaran yang sesuai;
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <div className="w-28 sm:w-32 shrink-0 font-bold">KEEMPAT</div>
+              <div className="w-4 shrink-0 font-bold">:</div>
+              <div className="flex-1">
+                Keputusan ini mulai berlaku sejak tanggal ditetapkan, dengan ketentuan apabila di kemudian hari terdapat kekeliruan dalam keputusan ini akan diadakan perbaikan sebagaimana mestinya.
+              </div>
+            </div>
+          </div>
+
+          {/* Titimangsa & Tanda Tangan */}
+          <div className="flex justify-end pt-6 break-inside-avoid">
+            <div className="w-72 space-y-1 text-xs">
+              <div className="grid grid-cols-5">
+                <span className="col-span-2">Ditetapkan di</span>
+                <span className="col-span-3">: {schoolProfile.tempatCetak || 'Sungai Buluh'}</span>
+              </div>
+              <div className="grid grid-cols-5">
+                <span className="col-span-2">Pada Tanggal</span>
+                <span className="col-span-3">: {schoolProfile.tanggalKelulusan}</span>
+              </div>
+              <div className="pt-2 font-bold">Kepala SD Negeri 006 Sungai Buluh,</div>
+              <div className="h-20"></div>
+              <div className="font-bold underline uppercase">{schoolProfile.kepalaSekolah}</div>
+              <div className="pt-0.5 text-zinc-900 dark:text-zinc-200 tracking-normal font-normal">
+                NIP. {schoolProfile.nipKepalaSekolah}
+              </div>
+            </div>
+          </div>
+
+          {/* Tembusan Resmi SK */}
+          <div className="pt-6 border-t border-zinc-300 dark:border-zinc-700 mt-6 text-[11px] break-inside-avoid">
+            <div className="font-bold mb-1">Tembusan disampaikan kepada Yth :</div>
+            <ol className="list-decimal pl-5 space-y-0.5 text-zinc-800 dark:text-zinc-300">
+              <li>Kepala Dinas Pendidikan Kepemudaan dan Olahraga Kab. Kuantan Singingi;</li>
+              <li>Koordinator Wilayah Bidang Pendidikan Kec. Singingi Hilir;</li>
+              <li>Ketua Komite SD Negeri 006 Sungai Buluh;</li>
+              <li>Yang bersangkutan untuk diketahui;</li>
+              <li>Arsip Sekolah.</li>
+            </ol>
+          </div>
+
+          {/* LAMPIRAN RESMI SK KELULUSAN DENGAN REKAPITULASI NILAI AKHIR */}
+          <div className="pt-8 border-t-2 border-black dark:border-zinc-300 mt-8 space-y-3 break-before-page">
+            <div className="text-center space-y-1">
+              <p className="text-[11px] font-bold uppercase">
+                LAMPIRAN KEPUTUSAN KEPALA SEKOLAH DASAR NEGERI 006 SUNGAI BULUH
+              </p>
+              <p className="font-mono text-[10px]">
+                NOMOR : 422/KPTS/SDN-006/SB/VI/2026/041
+              </p>
+              <p className="text-xs font-extrabold uppercase">
+                DAFTAR PESERTA DIDIK KELAS VI YANG DINYATAKAN LULUS & REKAP NILAI AKHIR
+              </p>
+              <p className="text-[11px] text-zinc-600 dark:text-zinc-400">
+                Tahun Pelajaran {schoolProfile.tahunPelajaran} • Kriteria Kelulusan Nilai Minimal: {schoolProfile.kkmKelulusan}
+              </p>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-[11px] border border-black dark:border-zinc-600 border-collapse">
+                <thead>
+                  <tr className="bg-zinc-100 dark:bg-zinc-800 font-bold border-b border-black dark:border-zinc-600">
+                    <th className="p-1.5 w-8 text-center border-r border-black dark:border-zinc-600">No</th>
+                    <th className="p-1.5 min-w-[100px] border-r border-black dark:border-zinc-600">No. Peserta</th>
+                    <th className="p-1.5 min-w-[80px] border-r border-black dark:border-zinc-600">NISN</th>
+                    <th className="p-1.5 min-w-[170px] border-r border-black dark:border-zinc-600">Nama Lengkap</th>
+                    <th className="p-1.5 text-center w-8 border-r border-black dark:border-zinc-600">L/P</th>
+                    <th className="p-1.5 text-center w-16 border-r border-black dark:border-zinc-600">Total NA</th>
+                    <th className="p-1.5 text-center w-16 border-r border-black dark:border-zinc-600">Rata NA</th>
+                    <th className="p-1.5 text-center min-w-[80px]">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {students.map((s, idx) => {
+                    const totalNA = calculateStudentTotalFinalScore(s, schoolProfile, subjects);
+                    const avgNA = calculateStudentOverallFinalScore(s, schoolProfile, subjects);
+                    return (
+                      <tr key={s.id} className="border-b border-black dark:border-zinc-700 h-6 break-inside-avoid">
+                        <td className="p-1 text-center font-bold border-r border-black dark:border-zinc-600">{idx + 1}</td>
+                        <td className="p-1 font-mono border-r border-black dark:border-zinc-600">{s.noPeserta}</td>
+                        <td className="p-1 font-mono border-r border-black dark:border-zinc-600">{s.nisn}</td>
+                        <td className="p-1 font-bold uppercase border-r border-black dark:border-zinc-600">{s.nama}</td>
+                        <td className="p-1 text-center border-r border-black dark:border-zinc-600">{s.jenisKelamin}</td>
+                        <td className="p-1 text-center font-mono font-bold border-r border-black dark:border-zinc-600">{totalNA.toFixed(1)}</td>
+                        <td className="p-1 text-center font-mono font-bold text-emerald-800 dark:text-emerald-400 border-r border-black dark:border-zinc-600">{avgNA.toFixed(2)}</td>
+                        <td className="p-1 text-center font-bold text-emerald-800 dark:text-emerald-400">LULUS</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Titimangsa Lampiran */}
+            <div className="flex justify-end pt-4 break-inside-avoid">
+              <div className="w-64 space-y-1 text-xs">
+                <div>Sungai Buluh, {schoolProfile.tanggalKelulusan}</div>
+                <div className="font-bold">Kepala SD Negeri 006 Sungai Buluh,</div>
+                <div className="h-16"></div>
+                <div className="font-bold underline uppercase">{schoolProfile.kepalaSekolah}</div>
+                <div className="pt-0.5 text-zinc-900 dark:text-zinc-200 tracking-normal font-normal">
+                  NIP. {schoolProfile.nipKepalaSekolah}
+                </div>
+              </div>
             </div>
           </div>
         </div>

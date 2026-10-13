@@ -295,8 +295,9 @@ export const FinalRecapView: React.FC = () => {
                           setActiveTab('diploma');
                         }}
                         className="rounded-lg bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950 dark:text-emerald-300 transition-colors"
+                        title="Buka Transkrip Nilai Siswa"
                       >
-                        SKHU
+                        Transkrip
                       </button>
                     </td>
                   </tr>
