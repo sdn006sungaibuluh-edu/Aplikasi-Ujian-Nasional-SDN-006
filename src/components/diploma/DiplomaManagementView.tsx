@@ -154,54 +154,47 @@ export const DiplomaManagementView: React.FC = () => {
               </p>
             </div>
 
-            {/* Student Biodata */}
-            <div className="rounded-xl bg-zinc-50/80 dark:bg-zinc-800/40 p-4 border border-zinc-200 dark:border-zinc-700 text-xs mb-6 space-y-1.5">
-              <div className="grid grid-cols-4 gap-2">
-                <span className="text-zinc-500 font-medium">Nama Peserta Didik</span>
-                <span className="col-span-3 font-extrabold uppercase text-zinc-950 dark:text-zinc-50">
-                  : {currentStudent.nama}
-                </span>
-              </div>
-              <div className="grid grid-cols-4 gap-2">
-                <span className="text-zinc-500 font-medium">Tempat, Tanggal Lahir</span>
-                <span className="col-span-3 font-medium">
-                  : {currentStudent.tempatLahir}, {currentStudent.tanggalLahir}
-                </span>
-              </div>
-              <div className="grid grid-cols-4 gap-2">
-                <span className="text-zinc-500 font-medium">Nama Orang Tua / Wali</span>
-                <span className="col-span-3 font-medium">: {currentStudent.namaAyah}</span>
-              </div>
-              <div className="grid grid-cols-4 gap-2">
-                <span className="text-zinc-500 font-medium">Nomor Induk Siswa (NIS)</span>
-                <span className="col-span-3 font-mono font-medium">: {currentStudent.nis}</span>
-              </div>
-              <div className="grid grid-cols-4 gap-2">
-                <span className="text-zinc-500 font-medium">Nomor Induk Siswa Nasional (NISN)</span>
-                <span className="col-span-3 font-mono font-medium">: {currentStudent.nisn}</span>
-              </div>
-              <div className="grid grid-cols-4 gap-2">
-                <span className="text-zinc-500 font-medium">Nomor Peserta Ujian</span>
-                <span className="col-span-3 font-mono font-extrabold text-emerald-800 dark:text-emerald-400">
-                  : {currentStudent.noPeserta}
-                </span>
-              </div>
-              <div className="grid grid-cols-4 gap-2">
-                <span className="text-zinc-500 font-medium">Nomor Ijazah</span>
-                <span className="col-span-3 font-mono font-bold text-zinc-900 dark:text-zinc-100">
-                  : {currentStudent.noSeriIjazah || '-'}
-                </span>
-              </div>
-              <div className="grid grid-cols-4 gap-2">
-                <span className="text-zinc-500 font-medium">Nomor SK Kelulusan</span>
-                <span className="col-span-3 font-mono font-medium text-emerald-800 dark:text-emerald-400">
-                  : {currentStudent.noSuratKelulusan || '-'}
-                </span>
-              </div>
-              <div className="grid grid-cols-4 gap-2">
-                <span className="text-zinc-500 font-medium">Sekolah Asal</span>
-                <span className="col-span-3 font-medium">: SDN 006 SUNGAI BULUH</span>
-              </div>
+            {/* Student & School Identity Form */}
+            <div className="rounded-xl bg-zinc-50/80 dark:bg-zinc-800/40 p-4 border border-zinc-200 dark:border-zinc-700 text-xs mb-6">
+              <table className="w-full text-xs">
+                <tbody className="divide-y divide-zinc-200/50 dark:divide-zinc-700/50">
+                  <tr>
+                    <td className="w-56 sm:w-64 py-1.5 text-zinc-600 dark:text-zinc-400 font-medium">Satuan Pendidikan</td>
+                    <td className="w-4 py-1.5">:</td>
+                    <td className="py-1.5 font-bold text-zinc-950 dark:text-zinc-50 uppercase">{schoolProfile.namaSekolah}</td>
+                  </tr>
+                  <tr>
+                    <td className="w-56 sm:w-64 py-1.5 text-zinc-600 dark:text-zinc-400 font-medium">Nomor Pokok Sekolah Nasional</td>
+                    <td className="w-4 py-1.5">:</td>
+                    <td className="py-1.5 font-mono font-medium">{schoolProfile.npsn}</td>
+                  </tr>
+                  <tr>
+                    <td className="w-56 sm:w-64 py-1.5 text-zinc-600 dark:text-zinc-400 font-medium">Nama Siswa</td>
+                    <td className="w-4 py-1.5">:</td>
+                    <td className="py-1.5 font-extrabold uppercase text-zinc-950 dark:text-zinc-50">{currentStudent.nama}</td>
+                  </tr>
+                  <tr>
+                    <td className="w-56 sm:w-64 py-1.5 text-zinc-600 dark:text-zinc-400 font-medium">Tempat Tanggal Lahir</td>
+                    <td className="w-4 py-1.5">:</td>
+                    <td className="py-1.5 font-medium">{currentStudent.tempatLahir}, {currentStudent.tanggalLahir}</td>
+                  </tr>
+                  <tr>
+                    <td className="w-56 sm:w-64 py-1.5 text-zinc-600 dark:text-zinc-400 font-medium">Nomor Induk Siswa Nasional</td>
+                    <td className="w-4 py-1.5">:</td>
+                    <td className="py-1.5 font-mono font-medium">{currentStudent.nisn}</td>
+                  </tr>
+                  <tr>
+                    <td className="w-56 sm:w-64 py-1.5 text-zinc-600 dark:text-zinc-400 font-medium">Nomor Ijazah</td>
+                    <td className="w-4 py-1.5">:</td>
+                    <td className="py-1.5 font-mono font-bold text-zinc-900 dark:text-zinc-100">{currentStudent.noSeriIjazah || '-'}</td>
+                  </tr>
+                  <tr>
+                    <td className="w-56 sm:w-64 py-1.5 text-zinc-600 dark:text-zinc-400 font-medium">Tanggal kelulusan</td>
+                    <td className="w-4 py-1.5">:</td>
+                    <td className="py-1.5 font-medium">{schoolProfile.tanggalKelulusan}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
 
             {/* Table of Grades */}
