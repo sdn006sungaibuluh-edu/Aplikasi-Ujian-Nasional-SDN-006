@@ -70,8 +70,10 @@ export const ExamToolsView: React.FC = () => {
     | 'undangan'
     | 'ba-kelulusan'
     | 'hadir-rapat'
-    | 'sk-kelulusan';
+    | 'sk-kelulusan'
+    | 'semua';
   const [activeSubTab, setActiveSubTab] = useState<ToolTab>('denah');
+  const [activeGraduationDoc, setActiveGraduationDoc] = useState<GraduationDocType>('undangan');
   const [selectedRoom, setSelectedRoom] = useState<'RUANG 1' | 'RUANG 2' | 'RUANG 3' | 'RUANG 4'>('RUANG 1');
   const [isPrintMenuOpen, setIsPrintMenuOpen] = useState(false);
   const [printDoc, setPrintDoc] = useState<ToolTab>('nilai');
@@ -88,13 +90,13 @@ export const ExamToolsView: React.FC = () => {
   const openPrintPreview = (tab?: ToolTab) => {
     if (tab) {
       if (tab === 'perangkat-kelulusan') {
-        setPrintDoc('undangan');
+        setPrintDoc(activeGraduationDoc || 'undangan');
       } else {
         setPrintDoc(tab);
       }
     } else {
       if (activeSubTab === 'perangkat-kelulusan') {
-        setPrintDoc('undangan');
+        setPrintDoc(activeGraduationDoc || 'undangan');
       } else {
         setPrintDoc(activeSubTab);
       }
@@ -200,7 +202,7 @@ export const ExamToolsView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900 flex flex-col md:flex-row md:items-center md:justify-between gap-4 print:hidden">
         <div>
           <div className="flex items-center gap-2">
             <Layers className="h-5 w-5 text-emerald-600" />
@@ -230,17 +232,27 @@ export const ExamToolsView: React.FC = () => {
             Menu Cetak Perangkat & Ruang
           </button>
           <button
-            onClick={() => openPrintPreview(activeSubTab === 'perangkat-kelulusan' ? 'undangan' : activeSubTab)}
+            onClick={() => openPrintPreview(activeSubTab === 'perangkat-kelulusan' ? activeGraduationDoc : activeSubTab)}
             className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-700 px-4 py-2 text-xs font-bold text-white shadow-md hover:bg-emerald-800 transition-colors"
           >
             <Printer className="h-4 w-4" />
-            Pratinjau & Cetak ({activeSubTab === 'perangkat-kelulusan' ? 'KELULUSAN' : activeSubTab.toUpperCase()})
+            Pratinjau & Cetak ({
+              activeSubTab === 'perangkat-kelulusan'
+                ? (activeGraduationDoc === 'undangan'
+                    ? 'UNDANGAN'
+                    : activeGraduationDoc === 'ba-kelulusan'
+                    ? 'BERITA ACARA'
+                    : activeGraduationDoc === 'hadir-rapat'
+                    ? 'DAFTAR HADIR'
+                    : 'SK KELULUSAN')
+                : activeSubTab.toUpperCase()
+            })
           </button>
         </div>
       </div>
 
       {/* Sub Tabs */}
-      <div className="flex overflow-x-auto gap-2 border-b border-zinc-200 dark:border-zinc-800 pb-3">
+      <div className="flex overflow-x-auto gap-2 border-b border-zinc-200 dark:border-zinc-800 pb-3 print:hidden">
         {(
           [
             { key: 'denah', label: 'Denah Ruang Ujian', icon: Grid3X3 },
@@ -293,7 +305,7 @@ export const ExamToolsView: React.FC = () => {
 
       {/* Room Selector if viewing Denah, Label Meja, Kartu, Hadir, or Nilai */}
       {['denah', 'label-meja', 'kartu', 'hadir', 'nilai'].includes(activeSubTab) && (
-        <div className="flex items-center justify-between bg-zinc-50 dark:bg-zinc-800/60 p-3 rounded-xl border border-zinc-200 dark:border-zinc-700">
+        <div className="flex items-center justify-between bg-zinc-50 dark:bg-zinc-800/60 p-3 rounded-xl border border-zinc-200 dark:border-zinc-700 print:hidden">
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold text-zinc-700 dark:text-zinc-300">Pilih Ruangan:</span>
             {(['RUANG 1', 'RUANG 2', 'RUANG 3', 'RUANG 4'] as const).map((r) => (
@@ -1217,8 +1229,9 @@ export const ExamToolsView: React.FC = () => {
           initialDoc={
             (['undangan', 'ba-kelulusan', 'hadir-rapat', 'sk-kelulusan'].includes(activeSubTab)
               ? (activeSubTab as GraduationDocType)
-              : 'undangan')
+              : activeGraduationDoc || 'undangan')
           }
+          onActiveDocChange={(doc) => setActiveGraduationDoc(doc)}
           onOpenPrintPreview={(doc) => openPrintPreview(doc as ToolTab)}
           showToast={showToast}
         />

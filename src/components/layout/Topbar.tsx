@@ -94,7 +94,7 @@ export const Topbar: React.FC<TopbarProps> = ({ onToggleMobile, collapsed }) => 
 
   return (
     <header
-      className={`sticky top-0 z-30 flex h-18 items-center justify-between border-b border-zinc-200 bg-white/95 px-4 backdrop-blur-md transition-all dark:border-zinc-800 dark:bg-zinc-900/95 lg:px-6`}
+      className={`sticky top-0 z-30 flex h-18 items-center justify-between border-b border-zinc-200 bg-white/95 px-4 backdrop-blur-md transition-all dark:border-zinc-800 dark:bg-zinc-900/95 lg:px-6 print:hidden`}
     >
       {/* Left: Mobile Toggle & Page Info */}
       <div className="flex items-center gap-3">

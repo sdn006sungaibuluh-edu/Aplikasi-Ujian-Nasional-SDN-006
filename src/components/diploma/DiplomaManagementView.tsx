@@ -9,6 +9,7 @@ import {
 } from '../../constants/subjects';
 import { Badge } from '../common/Badge';
 import { KopSurat } from '../common/KopSurat';
+import { PrintPreviewModal } from '../common/PrintPreviewModal';
 import {
   GraduationCap,
   Printer,
@@ -42,11 +43,14 @@ export const DiplomaManagementView: React.FC = () => {
   const [selectedStudentId, setSelectedStudentId] = useState<string>(
     selectedStudentForSKHU?.id || students[0]?.id || ''
   );
+  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
+  const [printSelectedDoc, setPrintSelectedDoc] = useState<TabKey>('skhu');
 
   const currentStudent = students.find((s) => s.id === selectedStudentId) || students[0];
 
-  const handlePrintDocument = () => {
-    window.print();
+  const handlePrintDocument = (docToPrint?: TabKey) => {
+    setPrintSelectedDoc(docToPrint || activeTab);
+    setIsPrintModalOpen(true);
   };
 
   const handleDeliveryUpdate = (id: string, date: string, recipient: string) => {
@@ -59,7 +63,7 @@ export const DiplomaManagementView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900 flex flex-col md:flex-row md:items-center md:justify-between gap-4 print:hidden">
         <div>
           <div className="flex items-center gap-2">
             <GraduationCap className="h-5 w-5 text-emerald-600" />
@@ -74,7 +78,7 @@ export const DiplomaManagementView: React.FC = () => {
 
         <div className="flex items-center gap-2">
           <button
-            onClick={handlePrintDocument}
+            onClick={() => handlePrintDocument(activeTab)}
             className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-700 px-4 py-2 text-xs font-bold text-white shadow-md hover:bg-emerald-800 transition-colors"
           >
             <Printer className="h-4 w-4" />
@@ -84,7 +88,7 @@ export const DiplomaManagementView: React.FC = () => {
       </div>
 
       {/* Navigation Sub Tabs */}
-      <div className="flex overflow-x-auto gap-2 border-b border-zinc-200 dark:border-zinc-800 pb-3">
+      <div className="flex overflow-x-auto gap-2 border-b border-zinc-200 dark:border-zinc-800 pb-3 print:hidden">
         {[
           { key: 'skhu', label: 'Transkrip Nilai', icon: FileText },
           { key: 'sk-kelulusan', label: 'Surat Keputusan (SK) Kelulusan', icon: Award },
@@ -116,7 +120,7 @@ export const DiplomaManagementView: React.FC = () => {
       {activeTab === 'skhu' && (
         <div className="space-y-6">
           {/* Student Selector Bar */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-zinc-50 dark:bg-zinc-800/60 p-4 rounded-xl border border-zinc-200 dark:border-zinc-700">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-zinc-50 dark:bg-zinc-800/60 p-4 rounded-xl border border-zinc-200 dark:border-zinc-700 print:hidden">
             <div className="flex items-center gap-3 w-full sm:w-auto">
               <span className="text-xs font-bold text-zinc-700 dark:text-zinc-300 shrink-0">
                 Pilih Peserta Didik:
@@ -134,13 +138,22 @@ export const DiplomaManagementView: React.FC = () => {
               </select>
             </div>
 
-            <div className="text-xs text-zinc-500 font-medium">
-              Format Resmi Transkrip Nilai Siswa SDN 006 Sungai Buluh
+            <div className="flex items-center gap-3">
+              <div className="text-xs text-zinc-500 font-medium hidden md:block">
+                Format Resmi Transkrip Nilai Siswa SDN 006 Sungai Buluh
+              </div>
+              <button
+                onClick={() => handlePrintDocument('skhu')}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-700 px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:bg-emerald-800 transition-colors shrink-0"
+              >
+                <Printer className="h-4 w-4" />
+                Cetak Transkrip Ini
+              </button>
             </div>
           </div>
 
           {/* Official Printable Transkrip Nilai / SKHU Sheet */}
-          <div className="mx-auto max-w-4xl rounded-2xl border-2 border-zinc-300 bg-white p-8 sm:p-12 shadow-md dark:border-zinc-700 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 print:border-none print:shadow-none print:p-0">
+          <div className="mx-auto max-w-4xl rounded-2xl border-2 border-zinc-300 bg-white p-8 sm:p-12 shadow-md dark:border-zinc-700 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 print:border-none print:shadow-none print:p-0 print:m-0 print:max-w-none print:w-full">
             {/* Kop Surat Resmi */}
             <KopSurat schoolProfile={schoolProfile} />
 
@@ -271,9 +284,24 @@ export const DiplomaManagementView: React.FC = () => {
 
       {/* 2. SURAT KEPUTUSAN KELULUSAN RESMI */}
       {activeTab === 'sk-kelulusan' && (
-        <div className="mx-auto max-w-4xl rounded-2xl border border-zinc-200 bg-white p-8 sm:p-12 shadow-md dark:border-zinc-800 dark:bg-zinc-900 space-y-6 text-xs text-zinc-900 dark:text-zinc-100 leading-relaxed font-serif print:border-none print:shadow-none print:p-0">
-          {/* Kop Surat Resmi SK Kelulusan */}
-          <KopSurat schoolProfile={schoolProfile} />
+        <div className="space-y-4">
+          <div className="flex items-center justify-between bg-zinc-50 dark:bg-zinc-800/60 p-4 rounded-xl border border-zinc-200 dark:border-zinc-700 print:hidden">
+            <div>
+              <h4 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">Pratinjau Surat Keputusan (SK) Kelulusan</h4>
+              <p className="text-xs text-zinc-500">Format resmi Keputusan Kepala Sekolah & Lampiran Rekapitulasi Nilai Akhir</p>
+            </div>
+            <button
+              onClick={() => handlePrintDocument('sk-kelulusan')}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-700 px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:bg-emerald-800 transition-colors"
+            >
+              <Printer className="h-4 w-4" />
+              Cetak SK Kelulusan
+            </button>
+          </div>
+
+          <div className="mx-auto max-w-4xl rounded-2xl border border-zinc-200 bg-white p-8 sm:p-12 shadow-md dark:border-zinc-800 dark:bg-zinc-900 space-y-6 text-xs text-zinc-900 dark:text-zinc-100 leading-relaxed font-serif print:border-none print:shadow-none print:p-0 print:m-0 print:max-w-none print:w-full">
+            {/* Kop Surat Resmi SK Kelulusan */}
+            <KopSurat schoolProfile={schoolProfile} />
 
           <div className="text-center space-y-1 pt-2 pb-2">
             <h3 className="text-sm sm:text-base font-extrabold uppercase tracking-widest text-zinc-900 dark:text-zinc-50">
@@ -524,12 +552,13 @@ export const DiplomaManagementView: React.FC = () => {
             </div>
           </div>
         </div>
+      </div>
       )}
 
       {/* 3. LAPORAN PENGGUNAAN BLANGKO IJAZAH */}
       {activeTab === 'blangko' && (
         <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900 space-y-6">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between print:hidden">
             <div>
               <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-50">
                 Laporan Penggunaan Blangko Ijazah SDN 006 Sungai Buluh
@@ -538,6 +567,13 @@ export const DiplomaManagementView: React.FC = () => {
                 Pencatatan nomor seri blangko ijazah yang diterima dari Dinas Pendidikan Kab. Kuantan Singingi
               </p>
             </div>
+            <button
+              onClick={() => handlePrintDocument('blangko')}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-700 px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:bg-emerald-800 transition-colors"
+            >
+              <Printer className="h-4 w-4" />
+              Cetak Laporan Ini
+            </button>
           </div>
 
           <div className="overflow-x-auto">
@@ -579,7 +615,7 @@ export const DiplomaManagementView: React.FC = () => {
       {/* 4. BUKU SERAH TERIMA IJAZAH & SKHU */}
       {activeTab === 'serah-terima' && (
         <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900 space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between print:hidden">
             <div>
               <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-50">
                 Buku Ekspedisi Serah Terima Ijazah & SKHU
@@ -588,6 +624,13 @@ export const DiplomaManagementView: React.FC = () => {
                 Tanda bukti penerimaan fisik ijazah asli oleh orang tua / wali murid
               </p>
             </div>
+            <button
+              onClick={() => handlePrintDocument('serah-terima')}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-700 px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:bg-emerald-800 transition-colors"
+            >
+              <Printer className="h-4 w-4" />
+              Cetak Buku Serah Terima
+            </button>
           </div>
 
           <div className="overflow-x-auto">
@@ -635,7 +678,7 @@ export const DiplomaManagementView: React.FC = () => {
       {/* 5. BUKU REGISTER NOMOR IJAZAH & SURAT RESMI */}
       {activeTab === 'register' && (
         <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900 space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between print:hidden">
             <div>
               <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-50">
                 Buku Register Nomor Ijazah, SK Kelulusan & Transkrip SKHU
@@ -644,6 +687,13 @@ export const DiplomaManagementView: React.FC = () => {
                 Buku kendali penomoran dokumen resmi kelulusan siswa kelas VI SDN 006 Sungai Buluh
               </p>
             </div>
+            <button
+              onClick={() => handlePrintDocument('register')}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-700 px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:bg-emerald-800 transition-colors"
+            >
+              <Printer className="h-4 w-4" />
+              Cetak Buku Register
+            </button>
           </div>
 
           <div className="overflow-x-auto">
@@ -692,13 +742,22 @@ export const DiplomaManagementView: React.FC = () => {
       {/* 6. DAFTAR HADIR ACARA PERPISAHAN SISWA KELAS 6 */}
       {activeTab === 'perpisahan' && (
         <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900 space-y-4">
-          <div className="text-center border-b pb-4 border-zinc-200 dark:border-zinc-800">
-            <h3 className="text-base font-extrabold uppercase text-zinc-900 dark:text-zinc-50">
-              DAFTAR HADIR ACARA PERPISAHAN SISWA SISWI KELAS VI
-            </h3>
-            <p className="text-xs text-zinc-500 font-semibold mt-1">
-              SDN 006 SUNGAI BULUH • TAHUN PELAJARAN {schoolProfile.tahunPelajaran}
-            </p>
+          <div className="flex items-center justify-between pb-4 border-b border-zinc-200 dark:border-zinc-800 print:hidden">
+            <div>
+              <h3 className="text-base font-extrabold uppercase text-zinc-900 dark:text-zinc-50">
+                DAFTAR HADIR ACARA PERPISAHAN SISWA SISWI KELAS VI
+              </h3>
+              <p className="text-xs text-zinc-500 font-semibold mt-0.5">
+                SDN 006 SUNGAI BULUH • TAHUN PELAJARAN {schoolProfile.tahunPelajaran}
+              </p>
+            </div>
+            <button
+              onClick={() => handlePrintDocument('perpisahan')}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-700 px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:bg-emerald-800 transition-colors"
+            >
+              <Printer className="h-4 w-4" />
+              Cetak Daftar Hadir Ini
+            </button>
           </div>
 
           <div className="overflow-x-auto">
@@ -733,6 +792,513 @@ export const DiplomaManagementView: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* ========================================================
+          PRINT PREVIEW MODAL: DOKUMEN IJAZAH & KELULUSAN TERPILIH
+         ======================================================== */}
+      <PrintPreviewModal
+        isOpen={isPrintModalOpen}
+        onClose={() => setIsPrintModalOpen(false)}
+        title={
+          printSelectedDoc === 'skhu'
+            ? `Transkrip Nilai Siswa - ${currentStudent?.nama || ''}`
+            : printSelectedDoc === 'sk-kelulusan'
+            ? `Surat Keputusan (SK) Kelulusan TP ${schoolProfile.tahunPelajaran}`
+            : printSelectedDoc === 'blangko'
+            ? `Laporan Penggunaan Blangko Ijazah`
+            : printSelectedDoc === 'serah-terima'
+            ? `Buku Ekspedisi Serah Terima Ijazah & SKHU`
+            : printSelectedDoc === 'register'
+            ? `Buku Register Nomor Ijazah & SKL`
+            : `Daftar Hadir Acara Perpisahan Siswa Kelas VI`
+        }
+        subtitle={`SDN 006 Sungai Buluh • Singingi Hilir • TP ${schoolProfile.tahunPelajaran}`}
+        defaultOrientation={['blangko', 'serah-terima', 'register'].includes(printSelectedDoc) ? 'landscape' : 'portrait'}
+        toolbarExtra={
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Pilihan Dokumen */}
+            <select
+              value={printSelectedDoc}
+              onChange={(e) => setPrintSelectedDoc(e.target.value as TabKey)}
+              className="rounded-xl border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-xs font-bold text-zinc-100 focus:border-emerald-500 focus:outline-none"
+            >
+              <option value="skhu">📄 Transkrip Nilai (SKHU Siswa)</option>
+              <option value="sk-kelulusan">⚖️ SK Kelulusan & Lampiran Rekap Nilai</option>
+              <option value="blangko">📑 Laporan Blangko Ijazah</option>
+              <option value="serah-terima">✍️ Buku Serah Terima Ijazah</option>
+              <option value="register">📚 Register Nomor Ijazah & SKL</option>
+              <option value="perpisahan">👥 Daftar Hadir Perpisahan</option>
+            </select>
+
+            {/* Pilihan Siswa bila Dokumen Transkrip Nilai dipilih */}
+            {printSelectedDoc === 'skhu' && (
+              <div className="flex items-center gap-1.5 text-xs">
+                <span className="text-zinc-400 font-semibold hidden sm:inline">Peserta:</span>
+                <select
+                  value={selectedStudentId}
+                  onChange={(e) => setSelectedStudentId(e.target.value)}
+                  className="rounded-xl border border-zinc-700 bg-zinc-800 px-2.5 py-1 text-xs font-bold text-zinc-200 focus:border-emerald-500 focus:outline-none max-w-[200px] truncate"
+                >
+                  {students.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.noPeserta} - {s.nama}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
+        }
+      >
+        <div className="space-y-6 text-xs text-black">
+          {/* 1. PRINTABLE TRANSKRIP NILAI */}
+          {printSelectedDoc === 'skhu' && (
+            <div className="space-y-5">
+              <KopSurat schoolProfile={schoolProfile} />
+
+              <div className="text-center my-4">
+                <h3 className="text-base font-extrabold uppercase underline tracking-wider">
+                  TRANSKRIP NILAI
+                </h3>
+                <p className="text-xs font-bold text-zinc-700 mt-0.5">
+                  Nomor: {currentStudent.noSuratTranskrip || `421.2 / SDN-006 / TRANSKRIP / ${schoolProfile.tahunPelajaran.replace('/', '-')} / ${currentStudent.noMeja.toString().padStart(3, '0')}`}
+                </p>
+              </div>
+
+              {/* Formulir Identitas */}
+              <div className="rounded-lg border border-black p-3.5 text-xs bg-white mb-5">
+                <table className="w-full text-xs">
+                  <tbody className="divide-y divide-zinc-200">
+                    <tr>
+                      <td className="w-56 py-1 font-medium">Satuan Pendidikan</td>
+                      <td className="w-4 py-1">:</td>
+                      <td className="py-1 font-bold uppercase">{schoolProfile.namaSekolah}</td>
+                    </tr>
+                    <tr>
+                      <td className="w-56 py-1 font-medium">Nomor Pokok Sekolah Nasional</td>
+                      <td className="w-4 py-1">:</td>
+                      <td className="py-1 font-mono font-medium">{schoolProfile.npsn}</td>
+                    </tr>
+                    <tr>
+                      <td className="w-56 py-1 font-medium">Nama Siswa</td>
+                      <td className="w-4 py-1">:</td>
+                      <td className="py-1 font-extrabold uppercase">{currentStudent.nama}</td>
+                    </tr>
+                    <tr>
+                      <td className="w-56 py-1 font-medium">Tempat Tanggal Lahir</td>
+                      <td className="w-4 py-1">:</td>
+                      <td className="py-1 font-medium">{currentStudent.tempatLahir}, {currentStudent.tanggalLahir}</td>
+                    </tr>
+                    <tr>
+                      <td className="w-56 py-1 font-medium">Nomor Induk Siswa Nasional</td>
+                      <td className="w-4 py-1">:</td>
+                      <td className="py-1 font-mono font-medium">{currentStudent.nisn}</td>
+                    </tr>
+                    <tr>
+                      <td className="w-56 py-1 font-medium">Nomor Ijazah</td>
+                      <td className="w-4 py-1">:</td>
+                      <td className="py-1 font-mono font-bold">{currentStudent.noSeriIjazah || '-'}</td>
+                    </tr>
+                    <tr>
+                      <td className="w-56 py-1 font-medium">Tanggal kelulusan</td>
+                      <td className="w-4 py-1">:</td>
+                      <td className="py-1 font-medium">{schoolProfile.tanggalKelulusan}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Tabel Nilai */}
+              <div className="border border-black rounded-sm overflow-hidden mb-5">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead className="bg-zinc-100 font-bold border-b border-black">
+                    <tr>
+                      <th className="p-2 w-12 text-center border-r border-black">No</th>
+                      <th className="p-2 border-r border-black">Mata Pelajaran (Kurikulum 2013)</th>
+                      <th className="p-2 text-center w-28">Nilai</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {subjects.map((sub, idx) => {
+                      const na = calculateSubjectFinalScore(currentStudent, sub.key, schoolProfile);
+                      return (
+                        <tr key={sub.key} className="border-b border-zinc-200">
+                          <td className="p-2 text-center font-medium border-r border-black">{idx + 1}</td>
+                          <td className="p-2 font-medium border-r border-black">{sub.name}</td>
+                          <td className="p-2 text-center font-mono font-bold">{na.toFixed(2)}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                  <tfoot className="border-t-2 border-black bg-zinc-50 font-bold">
+                    <tr>
+                      <td colSpan={2} className="p-2 text-right uppercase border-r border-black">Jumlah / Total Nilai :</td>
+                      <td className="p-2 text-center font-mono font-bold">
+                        {calculateStudentTotalFinalScore(currentStudent, schoolProfile, subjects).toFixed(2)}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan={2} className="p-2 text-right uppercase border-r border-black">Rata-Rata Nilai :</td>
+                      <td className="p-2 text-center font-mono font-extrabold text-sm">
+                        {calculateStudentOverallFinalScore(currentStudent, schoolProfile, subjects).toFixed(2)}
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+
+              {/* Tanda Tangan */}
+              <div className="flex justify-end pt-4 break-inside-avoid text-xs">
+                <div className="w-72 text-right space-y-1">
+                  <p>Sungai Buluh, {schoolProfile.tanggalKelulusan}</p>
+                  <p className="font-semibold">Kepala Sekolah SDN 006 Sungai Buluh,</p>
+                  <div className="h-16"></div>
+                  <p className="font-extrabold underline text-sm uppercase">{schoolProfile.kepalaSekolah}</p>
+                  <p className="pt-0.5 text-zinc-800 font-normal">NIP. {schoolProfile.nipKepalaSekolah}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 2. PRINTABLE SK KELULUSAN & LAMPIRAN */}
+          {printSelectedDoc === 'sk-kelulusan' && (
+            <div className="space-y-5 font-serif text-black leading-relaxed">
+              <KopSurat schoolProfile={schoolProfile} />
+
+              <div className="text-center space-y-1 pt-1 pb-1 leading-snug">
+                <h3 className="text-sm font-extrabold uppercase tracking-widest">K E P U T U S A N</h3>
+                <h4 className="text-xs font-bold uppercase">KEPALA SEKOLAH DASAR NEGERI 006 SUNGAI BULUH</h4>
+                <p className="font-mono font-bold text-xs">NOMOR : 422/KPTS/SDN-006/SB/VI/2026/041</p>
+                <div className="pt-1.5">
+                  <p className="text-xs font-bold uppercase tracking-widest">T E N T A N G</p>
+                  <p className="text-xs font-extrabold uppercase max-w-xl mx-auto">
+                    PENETAPAN KELULUSAN PESERTA DIDIK KELAS VI TAHUN PELAJARAN {schoolProfile.tahunPelajaran}
+                  </p>
+                </div>
+                <div className="pt-1.5">
+                  <p className="text-xs font-bold uppercase tracking-wide">DENGAN RAHMAT TUHAN YANG MAHA ESA</p>
+                  <p className="text-xs font-bold uppercase">KEPALA SEKOLAH DASAR NEGERI 006 SUNGAI BULUH,</p>
+                </div>
+              </div>
+
+              <div className="space-y-2 text-justify text-xs">
+                <div className="flex items-start">
+                  <div className="w-28 shrink-0 font-bold">Menimbang</div>
+                  <div className="w-4 shrink-0 font-bold">:</div>
+                  <div className="flex-1 space-y-1">
+                    <div className="flex items-start">
+                      <span className="w-5 shrink-0">a.</span>
+                      <span className="flex-1">
+                        Bahwa dalam rangka mengakhiri kegiatan proses pembelajaran bagi peserta didik Kelas VI Tahun Pelajaran {schoolProfile.tahunPelajaran}, perlu menetapkan kelulusan peserta didik;
+                      </span>
+                    </div>
+                    <div className="flex items-start">
+                      <span className="w-5 shrink-0">b.</span>
+                      <span className="flex-1">
+                        Bahwa peserta didik telah mengikuti seluruh proses pembelajaran dan Ujian Sekolah serta memenuhi kriteria kelulusan yang telah ditetapkan;
+                      </span>
+                    </div>
+                    <div className="flex items-start">
+                      <span className="w-5 shrink-0">c.</span>
+                      <span className="flex-1">
+                        Bahwa berdasarkan pertimbangan sebagaimana dimaksud pada huruf a dan huruf b, perlu menetapkan Keputusan Kepala Sekolah tentang Penetapan Kelulusan.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-start">
+                  <div className="w-28 shrink-0 font-bold">Mengingat</div>
+                  <div className="w-4 shrink-0 font-bold">:</div>
+                  <div className="flex-1 space-y-1">
+                    <div className="flex items-start"><span className="w-5 shrink-0">1.</span><span className="flex-1">UU No. 20 Tahun 2003 tentang Sistem Pendidikan Nasional;</span></div>
+                    <div className="flex items-start"><span className="w-5 shrink-0">2.</span><span className="flex-1">PP No. 4 Tahun 2022 tentang Standar Nasional Pendidikan;</span></div>
+                    <div className="flex items-start"><span className="w-5 shrink-0">3.</span><span className="flex-1">Permendikbudristek No. 21 Tahun 2022 tentang Standar Penilaian Pendidikan.</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-center font-bold pt-2 tracking-widest text-xs">M E M U T U S K A N :</div>
+
+              <div className="space-y-1.5 text-xs text-justify">
+                <div className="flex items-start">
+                  <div className="w-28 shrink-0 font-bold">Menetapkan</div>
+                  <div className="w-4 shrink-0 font-bold">:</div>
+                  <div className="flex-1 font-bold uppercase">
+                    KEPUTUSAN KEPALA SEKOLAH DASAR NEGERI 006 SUNGAI BULUH TENTANG PENETAPAN KELULUSAN PESERTA DIDIK KELAS VI TAHUN PELAJARAN {schoolProfile.tahunPelajaran}.
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="w-28 shrink-0 font-bold">KESATU</div>
+                  <div className="w-4 shrink-0 font-bold">:</div>
+                  <div className="flex-1">
+                    Nama-nama peserta didik Kelas VI Tahun Pelajaran {schoolProfile.tahunPelajaran} yang berjumlah {students.length} orang dinyatakan <b>LULUS (100%)</b> dari SD Negeri 006 Sungai Buluh;
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <div className="w-28 shrink-0 font-bold">KEDUA</div>
+                  <div className="w-4 shrink-0 font-bold">:</div>
+                  <div className="flex-1">
+                    Peserta didik yang dinyatakan lulus berhak memperoleh Surat Keterangan Lulus (SKL) / Transkrip Nilai dan Ijazah;
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end pt-4 break-inside-avoid text-xs">
+                <div className="w-64 space-y-0.5">
+                  <div>Ditetapkan di : {schoolProfile.tempatCetak || 'Sungai Buluh'}</div>
+                  <div>Pada Tanggal : {schoolProfile.tanggalKelulusan}</div>
+                  <div className="pt-1 font-bold">Kepala SD Negeri 006 Sungai Buluh,</div>
+                  <div className="h-16"></div>
+                  <div className="font-bold underline uppercase">{schoolProfile.kepalaSekolah}</div>
+                  <div>NIP. {schoolProfile.nipKepalaSekolah}</div>
+                </div>
+              </div>
+
+              {/* Lampiran Rekap Nilai */}
+              <div className="pt-6 border-t-2 border-black mt-6 space-y-3 break-before-page font-sans">
+                <div className="text-center space-y-0.5">
+                  <p className="text-[11px] font-bold uppercase">LAMPIRAN KEPUTUSAN KEPALA SEKOLAH DASAR NEGERI 006 SUNGAI BULUH</p>
+                  <p className="font-mono text-[10px]">NOMOR : 422/KPTS/SDN-006/SB/VI/2026/041</p>
+                  <p className="text-xs font-bold uppercase">DAFTAR PESERTA DIDIK YANG DINYATAKAN LULUS & REKAP NILAI AKHIR</p>
+                </div>
+                <table className="w-full text-left text-[11px] border border-black border-collapse">
+                  <thead>
+                    <tr className="bg-zinc-100 font-bold border-b border-black">
+                      <th className="p-1 w-8 text-center border-r border-black">No</th>
+                      <th className="p-1 border-r border-black">No. Peserta</th>
+                      <th className="p-1 border-r border-black">NISN</th>
+                      <th className="p-1 border-r border-black">Nama Lengkap</th>
+                      <th className="p-1 text-center w-8 border-r border-black">L/P</th>
+                      <th className="p-1 text-center w-16 border-r border-black">Total NA</th>
+                      <th className="p-1 text-center w-16 border-r border-black">Rata NA</th>
+                      <th className="p-1 text-center w-16">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {students.map((s, idx) => {
+                      const totalNA = calculateStudentTotalFinalScore(s, schoolProfile, subjects);
+                      const avgNA = calculateStudentOverallFinalScore(s, schoolProfile, subjects);
+                      return (
+                        <tr key={s.id} className="border-b border-zinc-300 break-inside-avoid">
+                          <td className="p-1 text-center font-bold border-r border-black">{idx + 1}</td>
+                          <td className="p-1 font-mono border-r border-black">{s.noPeserta}</td>
+                          <td className="p-1 font-mono border-r border-black">{s.nisn}</td>
+                          <td className="p-1 font-bold uppercase border-r border-black">{s.nama}</td>
+                          <td className="p-1 text-center border-r border-black">{s.jenisKelamin}</td>
+                          <td className="p-1 text-center font-mono font-bold border-r border-black">{totalNA.toFixed(1)}</td>
+                          <td className="p-1 text-center font-mono font-bold border-r border-black">{avgNA.toFixed(2)}</td>
+                          <td className="p-1 text-center font-bold">LULUS</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* 3. PRINTABLE LAPORAN BLANGKO */}
+          {printSelectedDoc === 'blangko' && (
+            <div className="space-y-4">
+              <KopSurat schoolProfile={schoolProfile} />
+              <div className="text-center my-3">
+                <h3 className="text-sm font-extrabold uppercase tracking-wide underline">
+                  LAPORAN PENGGUNAAN BLANGKO IJAZAH
+                </h3>
+                <p className="text-xs font-bold text-zinc-700">
+                  SDN 006 SUNGAI BULUH • TAHUN PELAJARAN {schoolProfile.tahunPelajaran}
+                </p>
+              </div>
+              <table className="w-full text-left text-xs border border-black border-collapse">
+                <thead className="bg-zinc-100 font-bold border-b border-black">
+                  <tr>
+                    <th className="p-2 border-r border-black">Tahun Pelajaran</th>
+                    <th className="p-2 text-center border-r border-black">Diterima</th>
+                    <th className="p-2 text-center border-r border-black">Terpakai</th>
+                    <th className="p-2 text-center border-r border-black">Rusak</th>
+                    <th className="p-2 text-center border-r border-black">Sisa</th>
+                    <th className="p-2 border-r border-black">Nomor Seri</th>
+                    <th className="p-2">Keterangan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {diplomaRecords.map((rec, idx) => (
+                    <tr key={idx} className="border-b border-zinc-300">
+                      <td className="p-2 font-bold border-r border-black">{rec.tahunPelajaran}</td>
+                      <td className="p-2 text-center font-mono border-r border-black">{rec.jumlahDiterima} lbr</td>
+                      <td className="p-2 text-center font-mono font-bold border-r border-black">{rec.terpakai} lbr</td>
+                      <td className="p-2 text-center font-mono border-r border-black">{rec.rusak} lbr</td>
+                      <td className="p-2 text-center font-mono font-bold border-r border-black">{rec.sisa} lbr</td>
+                      <td className="p-2 font-mono border-r border-black">{rec.seriAwal} s.d. {rec.seriAkhir}</td>
+                      <td className="p-2">{rec.keterangan}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="flex justify-end pt-6 break-inside-avoid text-xs">
+                <div className="w-64 space-y-1 text-center">
+                  <div>Sungai Buluh, {schoolProfile.tanggalKelulusan}</div>
+                  <div className="font-bold">Kepala SD Negeri 006 Sungai Buluh</div>
+                  <div className="h-16"></div>
+                  <div className="font-bold underline uppercase">{schoolProfile.kepalaSekolah}</div>
+                  <div>NIP. {schoolProfile.nipKepalaSekolah}</div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 4. PRINTABLE BUKU SERAH TERIMA */}
+          {printSelectedDoc === 'serah-terima' && (
+            <div className="space-y-4">
+              <KopSurat schoolProfile={schoolProfile} />
+              <div className="text-center my-3">
+                <h3 className="text-sm font-extrabold uppercase tracking-wide underline">
+                  BUKU EKSPEDISI SERAH TERIMA IJAZAH & TRANSKRIP NILAI
+                </h3>
+                <p className="text-xs font-bold text-zinc-700">
+                  SDN 006 SUNGAI BULUH • TAHUN PELAJARAN {schoolProfile.tahunPelajaran}
+                </p>
+              </div>
+              <table className="w-full text-left text-xs border border-black border-collapse">
+                <thead className="bg-zinc-100 font-bold border-b border-black">
+                  <tr>
+                    <th className="p-1.5 w-10 text-center border-r border-black">No</th>
+                    <th className="p-1.5 border-r border-black">Nama Siswa</th>
+                    <th className="p-1.5 border-r border-black">NISN</th>
+                    <th className="p-1.5 border-r border-black">No. Seri Ijazah</th>
+                    <th className="p-1.5 border-r border-black">Tgl Penyerahan</th>
+                    <th className="p-1.5 border-r border-black">Nama Penerima</th>
+                    <th className="p-1.5 text-center w-28">Tanda Tangan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {students.map((s, idx) => (
+                    <tr key={s.id} className="border-b border-zinc-300 break-inside-avoid h-8">
+                      <td className="p-1.5 text-center font-bold border-r border-black">{idx + 1}</td>
+                      <td className="p-1.5 font-bold uppercase border-r border-black">{s.nama}</td>
+                      <td className="p-1.5 font-mono border-r border-black">{s.nisn}</td>
+                      <td className="p-1.5 font-mono border-r border-black">{s.noSeriIjazah || '-'}</td>
+                      <td className="p-1.5 border-r border-black">{s.tanggalAmbilIjazah || '-'}</td>
+                      <td className="p-1.5 border-r border-black">{s.penerimaIjazah || `${s.namaAyah} (Orang Tua)`}</td>
+                      <td className="p-1.5 text-center text-[10px] text-zinc-500">{idx + 1}. .........</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="flex justify-end pt-6 break-inside-avoid text-xs">
+                <div className="w-64 space-y-1 text-center">
+                  <div>Sungai Buluh, {schoolProfile.tanggalKelulusan}</div>
+                  <div className="font-bold">Kepala SD Negeri 006 Sungai Buluh</div>
+                  <div className="h-16"></div>
+                  <div className="font-bold underline uppercase">{schoolProfile.kepalaSekolah}</div>
+                  <div>NIP. {schoolProfile.nipKepalaSekolah}</div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 5. PRINTABLE BUKU REGISTER */}
+          {printSelectedDoc === 'register' && (
+            <div className="space-y-4">
+              <KopSurat schoolProfile={schoolProfile} />
+              <div className="text-center my-3">
+                <h3 className="text-sm font-extrabold uppercase tracking-wide underline">
+                  BUKU REGISTER NOMOR IJAZAH, SKL & TRANSKRIP NILAI
+                </h3>
+                <p className="text-xs font-bold text-zinc-700">
+                  SDN 006 SUNGAI BULUH • TAHUN PELAJARAN {schoolProfile.tahunPelajaran}
+                </p>
+              </div>
+              <table className="w-full text-left text-xs border border-black border-collapse">
+                <thead className="bg-zinc-100 font-bold border-b border-black">
+                  <tr>
+                    <th className="p-1.5 w-10 text-center border-r border-black">No</th>
+                    <th className="p-1.5 border-r border-black">Nama Siswa</th>
+                    <th className="p-1.5 border-r border-black">No. Peserta</th>
+                    <th className="p-1.5 border-r border-black">NISN</th>
+                    <th className="p-1.5 border-r border-black">No. Seri Ijazah</th>
+                    <th className="p-1.5 border-r border-black">No. Surat Kelulusan (SKL)</th>
+                    <th className="p-1.5 border-r border-black">No. Transkrip Nilai</th>
+                    <th className="p-1.5 text-center w-20">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {students.map((s, idx) => (
+                    <tr key={s.id} className="border-b border-zinc-300 break-inside-avoid">
+                      <td className="p-1.5 text-center font-bold border-r border-black">{idx + 1}</td>
+                      <td className="p-1.5 font-bold uppercase border-r border-black">{s.nama}</td>
+                      <td className="p-1.5 font-mono border-r border-black">{s.noPeserta}</td>
+                      <td className="p-1.5 font-mono border-r border-black">{s.nisn}</td>
+                      <td className="p-1.5 font-mono font-bold border-r border-black">{s.noSeriIjazah || '-'}</td>
+                      <td className="p-1.5 font-mono border-r border-black">{s.noSuratKelulusan || '-'}</td>
+                      <td className="p-1.5 font-mono border-r border-black">{s.noSuratTranskrip || '-'}</td>
+                      <td className="p-1.5 text-center font-bold">{s.statusKelulusan}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="flex justify-end pt-6 break-inside-avoid text-xs">
+                <div className="w-64 space-y-1 text-center">
+                  <div>Sungai Buluh, {schoolProfile.tanggalKelulusan}</div>
+                  <div className="font-bold">Kepala SD Negeri 006 Sungai Buluh</div>
+                  <div className="h-16"></div>
+                  <div className="font-bold underline uppercase">{schoolProfile.kepalaSekolah}</div>
+                  <div>NIP. {schoolProfile.nipKepalaSekolah}</div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 6. PRINTABLE DAFTAR HADIR PERPISAHAN */}
+          {printSelectedDoc === 'perpisahan' && (
+            <div className="space-y-4">
+              <KopSurat schoolProfile={schoolProfile} />
+              <div className="text-center my-3">
+                <h3 className="text-sm font-extrabold uppercase tracking-wide underline">
+                  DAFTAR HADIR ACARA PERPISAHAN SISWA SISWI KELAS VI
+                </h3>
+                <p className="text-xs font-bold text-zinc-700">
+                  SDN 006 SUNGAI BULUH • TAHUN PELAJARAN {schoolProfile.tahunPelajaran}
+                </p>
+              </div>
+              <table className="w-full text-left text-xs border border-black border-collapse">
+                <thead className="bg-zinc-100 font-bold border-b border-black">
+                  <tr>
+                    <th className="p-2 w-10 text-center border-r border-black">No</th>
+                    <th className="p-2 border-r border-black">Nama Siswa</th>
+                    <th className="p-2 border-r border-black">Nama Orang Tua / Wali</th>
+                    <th className="p-2 text-center w-28 border-r border-black">Tanda Tangan Siswa</th>
+                    <th className="p-2 text-center w-28 border-r border-black">Tanda Tangan Wali</th>
+                    <th className="p-2 text-center w-16">Ket</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {students.map((s, idx) => (
+                    <tr key={s.id} className="border-b border-zinc-300 break-inside-avoid h-9">
+                      <td className="p-2 text-center font-bold border-r border-black">{idx + 1}</td>
+                      <td className="p-2 font-bold uppercase border-r border-black">{s.nama}</td>
+                      <td className="p-2 border-r border-black">{s.namaAyah}</td>
+                      <td className="p-2 border-r border-black text-center text-[10px] text-zinc-500">{idx + 1}. .........</td>
+                      <td className="p-2 border-r border-black text-center text-[10px] text-zinc-500">{idx + 1}. .........</td>
+                      <td className="p-2 text-center font-bold">Hadir</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="flex justify-end pt-6 break-inside-avoid text-xs">
+                <div className="w-64 space-y-1 text-center">
+                  <div>Sungai Buluh, {schoolProfile.tanggalKelulusan}</div>
+                  <div className="font-bold">Kepala SD Negeri 006 Sungai Buluh</div>
+                  <div className="h-16"></div>
+                  <div className="font-bold underline uppercase">{schoolProfile.kepalaSekolah}</div>
+                  <div>NIP. {schoolProfile.nipKepalaSekolah}</div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </PrintPreviewModal>
     </div>
   );
 };

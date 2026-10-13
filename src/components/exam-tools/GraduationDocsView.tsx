@@ -59,6 +59,7 @@ interface Props {
   students: Student[];
   initialDoc?: GraduationDocType;
   onOpenPrintPreview: (docType: GraduationDocType) => void;
+  onActiveDocChange?: (docType: GraduationDocType) => void;
   showToast?: (title: string, message: string, type?: 'success' | 'error' | 'info') => void;
 }
 
@@ -67,11 +68,16 @@ export const GraduationDocsView: React.FC<Props> = ({
   students,
   initialDoc = 'undangan',
   onOpenPrintPreview,
+  onActiveDocChange,
   showToast,
 }) => {
   const [activeDoc, setActiveDoc] = useState<GraduationDocType>(initialDoc);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isEditGuruModalOpen, setIsEditGuruModalOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    onActiveDocChange?.(activeDoc);
+  }, [activeDoc, onActiveDocChange]);
 
   // 1. Undangan State (Loaded from localStorage)
   const [undanganState, setUndanganState] = useState<UndanganDocState>(loadUndanganDocState);
@@ -663,7 +669,7 @@ export const GraduationDocsView: React.FC<Props> = ({
   return (
     <div className="space-y-6">
       {/* Top Banner Kelulusan */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 rounded-3xl border border-emerald-200 bg-linear-to-r from-emerald-50 via-teal-50/50 to-white p-5 shadow-xs dark:border-emerald-900/40 dark:from-emerald-950/40 dark:via-zinc-900 dark:to-zinc-900">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 rounded-3xl border border-emerald-200 bg-linear-to-r from-emerald-50 via-teal-50/50 to-white p-5 shadow-xs dark:border-emerald-900/40 dark:from-emerald-950/40 dark:via-zinc-900 dark:to-zinc-900 print:hidden">
         <div>
           <div className="flex items-center gap-3">
             <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-700 text-white shadow-md">
@@ -768,7 +774,7 @@ export const GraduationDocsView: React.FC<Props> = ({
       </div>
 
       {/* Navigasi Lembar Kerja (GraduationDocsView): 4 kartu dokumen berurutan dalam grid 4 kolom */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 print:hidden">
         {[
           {
             key: 'undangan',
@@ -809,7 +815,10 @@ export const GraduationDocsView: React.FC<Props> = ({
             <button
               key={doc.key}
               type="button"
-              onClick={() => setActiveDoc(doc.key as GraduationDocType)}
+              onClick={() => {
+                setActiveDoc(doc.key as GraduationDocType);
+                onActiveDocChange?.(doc.key as GraduationDocType);
+              }}
               className={`p-4 rounded-2xl border text-left transition-all relative overflow-hidden flex flex-col justify-between ${
                 isActive
                   ? 'border-emerald-600 bg-emerald-50/90 shadow-md ring-2 ring-emerald-500/20 dark:bg-emerald-950/40 dark:border-emerald-500'
@@ -853,7 +862,7 @@ export const GraduationDocsView: React.FC<Props> = ({
 
       {/* Editor Panel bila Mode Sunting Aktif */}
       {isEditing && (
-        <div className="rounded-3xl border border-amber-300 bg-amber-50/70 p-5 dark:border-amber-900/60 dark:bg-amber-950/20 space-y-4">
+        <div className="rounded-3xl border border-amber-300 bg-amber-50/70 p-5 dark:border-amber-900/60 dark:bg-amber-950/20 space-y-4 print:hidden">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Edit3 className="h-4 w-4 text-amber-700 dark:text-amber-400" />
@@ -1359,7 +1368,7 @@ export const GraduationDocsView: React.FC<Props> = ({
       )}
 
       {/* Kontrol Toolbar Word Khusus Dokumen yang Aktif */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-zinc-200/90 dark:bg-zinc-800/90 px-4 py-2.5 rounded-2xl text-xs border border-zinc-300 dark:border-zinc-700 shadow-xs">
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-zinc-200/90 dark:bg-zinc-800/90 px-4 py-2.5 rounded-2xl text-xs border border-zinc-300 dark:border-zinc-700 shadow-xs print:hidden">
         <div className="flex items-center gap-2 text-zinc-800 dark:text-zinc-200 font-bold">
           <AlignJustify className="h-4 w-4 text-emerald-600" />
           <span>
@@ -1525,10 +1534,10 @@ export const GraduationDocsView: React.FC<Props> = ({
       </div>
 
       {/* Lembar Tampilan Dokumen Kertas A4 (Mirip Microsoft Word Canvas) */}
-      <div className="rounded-3xl border border-zinc-300 bg-zinc-200/70 p-4 sm:p-8 dark:border-zinc-800 dark:bg-zinc-950 flex flex-col items-center">
+      <div className="rounded-3xl border border-zinc-300 bg-zinc-200/70 p-4 sm:p-8 dark:border-zinc-800 dark:bg-zinc-950 flex flex-col items-center print:border-none print:p-0 print:bg-white print:m-0 print:shadow-none">
         {/* Word Ruler Bar Simulation for All Word-style Documents */}
         {['undangan', 'ba-kelulusan', 'sk-kelulusan'].includes(activeDoc) && (
-          <div className="w-full max-w-[210mm] bg-zinc-100 border border-zinc-300 border-b-0 rounded-t-xl px-6 py-2 flex items-center justify-between text-[10px] font-mono text-zinc-600 select-none shadow-xs">
+          <div className="w-full max-w-[210mm] bg-zinc-100 border border-zinc-300 border-b-0 rounded-t-xl px-6 py-2 flex items-center justify-between text-[10px] font-mono text-zinc-600 select-none shadow-xs print:hidden">
             <span className="flex items-center gap-1.5 font-sans font-bold text-zinc-800">
               <span className="h-2 w-2 rounded-full bg-blue-600 inline-block"></span>
               Microsoft Word Print Layout • Standar A4 (21,0 cm × 29,7 cm)
@@ -1547,7 +1556,7 @@ export const GraduationDocsView: React.FC<Props> = ({
         )}
 
         <div
-          className="w-full max-w-[210mm] min-h-[297mm] bg-white text-black p-8 sm:p-14 shadow-2xl border border-zinc-300 transition-all"
+          className="w-full max-w-[210mm] min-h-[297mm] bg-white text-black p-8 sm:p-14 shadow-2xl border border-zinc-300 transition-all print:shadow-none print:border-none print:p-0 print:m-0 print:max-w-none print:w-full print:text-black"
           style={{
             fontFamily: getFontCssFamily(currentFontFamily),
             fontSize: currentFontSize,
